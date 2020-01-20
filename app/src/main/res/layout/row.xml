@@ -5,15 +5,16 @@
 
 
     <EditText
-        android:id="@+id/namefield"
+        android:id="@+id/todo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="4"
+        android:background="@null"
         android:textColor="#000000"
         android:textSize="20sp" />
 
     <Button
-        android:id="@+id/delbtn"
+        android:id="@+id/addButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@drawable/check_box"

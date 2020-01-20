@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,8 +38,9 @@ public class MyAdapter extends BaseAdapter {
         final int i = position;
         if (view == null)
             view = View.inflate(context, layout, null);
-        TextView namename = view.findViewById(R.id.namefield);
-        Button delBtn = view.findViewById(R.id.delbtn);
+        EditText todoField = view.findViewById(R.id.todo);
+        Button addButton = view.findViewById(R.id.addButton);
+        todoField.setText(al.get(i).todo);
         return view;
     }
 
