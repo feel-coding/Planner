@@ -1,5 +1,7 @@
 package my.study.planner;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -20,9 +22,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.EditText;
 import android.widget.ListView;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -30,11 +38,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DBHelper helper;
     ArrayList<Planner> al = new ArrayList<>();
     MyAdapter adapter;
+    EditText editText;
+    SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lv = findViewById(R.id.lv);
+        editText = findViewById(R.id.edit);
         helper = new DBHelper(this);
         adapter = new MyAdapter(this, al, R.layout.row);
         lv.setAdapter(adapter);
@@ -111,5 +122,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void onClick(View view) {
+        db = helper.getWritableDatabase();
+        ContentValues values;
+        String n = editText.getText().toString(); //getText는 String 타입이 아니라 CharSequence 타입이기 때문에
+        values = new ContentValues();
+        values.put("todo", n);
+        values.put("done", 0);
+        LocalDate date = LocalDate.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-M-d");
+        String d = date.format(dateTimeFormatter);
+        values.put("date", d);
+        long id = db.insert("contacts", null, values);
+        Planner planner = new Planner(id, n, d, 0);
+        al.add(planner);
+        editText.setText("");
+        adapter.notifyDataSetChanged();
     }
 }
