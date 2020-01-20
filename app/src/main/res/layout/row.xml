@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="4"
         android:textColor="#000000"
-        android:background="null"
         android:textSize="20sp" />
 
     <Button
