@@ -26,13 +26,14 @@ public class PastPlans extends AppCompatActivity {
         adapter = new MyAdapter(this, al, R.layout.row);
         lv.setAdapter(adapter);
         String date = getIntent().getStringExtra("date");
-        Log.d("datedate", date);
-        db = SQLiteDatabase.openDatabase("/data/user/0/my.study.planner/databases/planners.db", null, SQLiteDatabase.OPEN_READONLY);
-        Cursor c = db.rawQuery("select * from planners where date=" + date, null);
+        Log.d("datedate", "엑스트라로 받은 날짜: " + date);
+        db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from planners", null);
         while (c.moveToNext()) {
-            Log.d("datedate", c.getString(1));
+            Log.d("datedate", "id: " + c.getLong(0) + ", todo: " +  c.getString(1) + ", date: " + c.getString(2));
             Planner planner = new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3));
-            al.add(planner);
+            if (date.equals(c.getString(2)))
+                al.add(planner);
         }
         adapter.notifyDataSetChanged();
         c.close();
