@@ -3,6 +3,7 @@ package my.study.planner;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -16,6 +17,7 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -26,6 +28,7 @@ public class CalendarActivity extends AppCompatActivity {
     SimpleDateFormat dateFormat;
     SQLiteOpenHelper helper;
     SQLiteDatabase db;
+    ArrayList<Planner> al = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +50,9 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 String selectedDay = dateFormat.format(date.getDate());
-                db = helper.getReadableDatabase();
-                Cursor c = db.rawQuery("select * from planners where date=" + dateFormat, null);
-                while (c.moveToNext()) {
-
-                }
+                Intent i = new Intent(CalendarActivity.this, PastPlans.class);
+                i.putExtra("date", selectedDay);
+                startActivity(i);
             }
         });
     }
