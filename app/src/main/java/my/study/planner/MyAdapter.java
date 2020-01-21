@@ -35,12 +35,11 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        final int i = position;
         if (view == null)
             view = View.inflate(context, layout, null);
         EditText todoField = view.findViewById(R.id.todo);
         Button addButton = view.findViewById(R.id.addButton);
-        todoField.setText(al.get(i).todo);
+        todoField.setText(al.get(position).todo);
         return view;
     }
 

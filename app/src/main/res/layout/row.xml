@@ -5,6 +5,7 @@
 
 
     <EditText
+        android:layout_marginLeft="10dp"
         android:id="@+id/todo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

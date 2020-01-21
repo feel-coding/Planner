@@ -1,6 +1,7 @@
 package my.study.planner;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         helper = new DBHelper(this);
         adapter = new MyAdapter(this, al, R.layout.row);
         lv.setAdapter(adapter);
+        getTodoList();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -135,10 +137,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-M-d");
         String d = date.format(dateTimeFormatter);
         values.put("date", d);
-        long id = db.insert("contacts", null, values);
+        long id = db.insert("planners", null, values);
         Planner planner = new Planner(id, n, d, 0);
         al.add(planner);
         editText.setText("");
         adapter.notifyDataSetChanged();
+    }
+    void getTodoList () {
+        db = helper.getReadableDatabase();
+        Cursor c = db.query("planners", new String[]{"_id", "todo", "date", "done"}, null, null, null, null, null);
+        while (c.moveToNext()) {
+            al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3)));
+        }
+        c.close();
+        helper.close();
     }
 }
