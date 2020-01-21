@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         values.put("todo", n);
         values.put("done", 0);
         LocalDate date = LocalDate.now();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-M-d");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String d = date.format(dateTimeFormatter);
         values.put("date", d);
         long id = db.insert("planners", null, values);

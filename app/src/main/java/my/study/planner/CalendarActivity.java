@@ -1,28 +1,40 @@
 package my.study.planner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.StringTokenizer;
 
 public class CalendarActivity extends AppCompatActivity {
 
     private MaterialCalendarView calendarView;
-
+    SimpleDateFormat dateFormat;
+    SQLiteOpenHelper helper;
+    SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-        calendarView = (MaterialCalendarView) findViewById(R.id.calendarView);
+        helper = new DBHelper(this);
+        calendarView = findViewById(R.id.calendarView);
         calendarView.state().edit()
                 .setFirstDayOfWeek(Calendar.SUNDAY)
-                .setMinimumDate(CalendarDay.from(2017, 0, 1))
+                .setMinimumDate(CalendarDay.from(2017, 0, 1)) //0월이 1월
                 .setMaximumDate(CalendarDay.from(2030, 11, 31))
                 .setCalendarDisplayMode(CalendarMode.MONTHS)
                 .commit();
@@ -30,5 +42,17 @@ public class CalendarActivity extends AppCompatActivity {
                 new SundayDecorator(),
                 new SaturdayDecorator(),
                 new TodayDecorator());
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                String selectedDay = dateFormat.format(date.getDate());
+                db = helper.getReadableDatabase();
+                Cursor c = db.rawQuery("select * from planners where date=" + dateFormat, null);
+                while (c.moveToNext()) {
+
+                }
+            }
+        });
     }
 }
