@@ -9,6 +9,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.core.view.GravityCompat;
@@ -147,8 +148,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     void getTodoList () {
         db = helper.getReadableDatabase();
+        Log.d("datedate",db.toString());
         Cursor c = db.query("planners", new String[]{"_id", "todo", "date", "done"}, null, null, null, null, null);
         while (c.moveToNext()) {
+            Log.d("datedate", c.getString(1) + ", " + c.getString(2));
             al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3)));
         }
         c.close();
