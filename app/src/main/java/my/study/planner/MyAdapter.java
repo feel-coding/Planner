@@ -37,7 +37,7 @@ public class MyAdapter extends BaseAdapter {
     public View getView(int position, View view, ViewGroup parent) {
         if (view == null)
             view = View.inflate(context, layout, null);
-        EditText todoField = view.findViewById(R.id.todo);
+        TextView todoField = view.findViewById(R.id.todo);
         Button addButton = view.findViewById(R.id.addButton);
         todoField.setText(al.get(position).todo);
         return view;
