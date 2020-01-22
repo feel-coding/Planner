@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ListView lv;
     DBHelper helper;
     ArrayList<Planner> al = new ArrayList<>();
-    MyAdapter adapter;
+    SelectionAdapter adapter;
     EditText editText;
     SQLiteDatabase db;
     @Override
@@ -64,9 +64,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
                         if(checked) {
+                            adapter.setNewSelection(position, checked);
                             selected.add(al.get(position));
                         }
                         else { //사용자가 선택했던 아이템을 다시 한 번 더 눌러서 취소할 경우
+                            adapter.removeSelection(position);
                             selected.remove(al.get(position));
                         }
                     }
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         editText = findViewById(R.id.edit);
         helper = new DBHelper(this);
-        adapter = new MyAdapter(this, al, R.layout.row);
+        adapter = new SelectionAdapter(this, al, R.layout.row);
         lv.setAdapter(adapter);
         getTodoList();
         Toolbar toolbar = findViewById(R.id.toolbar);

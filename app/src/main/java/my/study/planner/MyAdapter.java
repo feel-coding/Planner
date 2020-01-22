@@ -33,6 +33,10 @@ public class MyAdapter extends BaseAdapter {
         this.layout = layout;
     }
 
+    public Activity getContext() {
+        return context;
+    }
+
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         if (view == null)
