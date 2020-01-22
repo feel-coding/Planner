@@ -12,6 +12,7 @@
         android:layout_weight="4"
         android:background="@null"
         android:textColor="#000000"
+        android:focusable="false"
         android:textSize="20sp" />
 
     <Button

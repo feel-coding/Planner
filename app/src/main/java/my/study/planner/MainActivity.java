@@ -10,6 +10,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.MenuInflater;
 import android.view.View;
 
 import androidx.core.view.GravityCompat;
@@ -25,8 +27,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -48,6 +55,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lv = findViewById(R.id.lv);
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            ArrayList<Planner> selected = new ArrayList<>();
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL); //롱클릭일 때에만 복수 선택이 가능하도록 롱클릭 메소드 안에 넣음
+                lv.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener(){
+                    @Override
+                    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+                        if(checked) {
+                            selected.add(al.get(position));
+                        }
+                        else { //사용자가 선택했던 아이템을 다시 한 번 더 눌러서 취소할 경우
+                            selected.remove(al.get(position));
+                        }
+                    }
+
+                    @Override
+                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                        MenuInflater inflater = getMenuInflater();
+                        inflater.inflate(R.menu.contextual,menu);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.delete_todo:
+                                DBHelper dbHelper = new DBHelper(MainActivity.this);
+                                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                                Planner planner = al.get(position);
+                                db.delete("contacts", "_id=" + planner.id, null);
+                                al.remove(position);
+                                adapter.notifyDataSetChanged();
+                                break;
+                            case R.id.share_todo:
+                                break;
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public void onDestroyActionMode(ActionMode mode) {
+
+                    }
+                });
+                return false;
+            }
+        });
         editText = findViewById(R.id.edit);
         helper = new DBHelper(this);
         adapter = new MyAdapter(this, al, R.layout.row);
