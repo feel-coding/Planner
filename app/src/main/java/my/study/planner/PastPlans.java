@@ -1,6 +1,7 @@
 package my.study.planner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,8 +26,9 @@ public class PastPlans extends AppCompatActivity {
         lv = findViewById(R.id.list);
         adapter = new MyAdapter(this, al, R.layout.row);
         lv.setAdapter(adapter);
+        Toolbar tb = findViewById(R.id.past_plan_tb);
         String date = getIntent().getStringExtra("date");
-        Log.d("datedate", "엑스트라로 받은 날짜: " + date);
+        tb.setTitle(date);
         db = helper.getReadableDatabase();
         Cursor c = db.rawQuery("select * from planners", null);
         while (c.moveToNext()) {
