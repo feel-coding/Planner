@@ -1,6 +1,7 @@
 package my.study.planner;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,6 +15,7 @@ import android.view.ActionMode;
 import android.view.MenuInflater;
 import android.view.View;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
@@ -41,6 +43,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -50,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SelectionAdapter adapter;
     EditText editText;
     SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,26 +62,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         lv = findViewById(R.id.lv);
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             ArrayList<Planner> selected = new ArrayList<>();
+
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL); //롱클릭일 때에만 복수 선택이 가능하도록 롱클릭 메소드 안에 넣음
-                lv.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener(){
+                lv.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+                    int n = 0;
+
                     @Override
                     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                        if(checked) {
+                        if (checked) {
                             adapter.setNewSelection(position, checked);
                             selected.add(al.get(position));
-                        }
-                        else { //사용자가 선택했던 아이템을 다시 한 번 더 눌러서 취소할 경우
+                            n++;
+                        } else { //사용자가 선택했던 아이템을 다시 한 번 더 눌러서 취소할 경우
                             adapter.removeSelection(position);
                             selected.remove(al.get(position));
+                            n--;
                         }
+                        mode.setTitle(n + "개 선택됨");
                     }
 
                     @Override
                     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                         MenuInflater inflater = getMenuInflater();
-                        inflater.inflate(R.menu.contextual,menu);
+                        inflater.inflate(R.menu.contextual, menu);
                         return true;
                     }
 
@@ -86,17 +96,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
 
                     @Override
-                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                    public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.delete_todo:
-                                DBHelper dbHelper = new DBHelper(MainActivity.this);
-                                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                                Planner planner = al.get(position);
-                                db.delete("contacts", "_id=" + planner.id, null);
-                                al.remove(position);
-                                adapter.notifyDataSetChanged();
+                                db = helper.getWritableDatabase();
+                                for (Planner p : selected) {
+                                    db.delete("planners", "_id=" + p.id, null);
+                                    al.remove(p);
+                                    adapter.notifyDataSetChanged();
+                                }
+                                adapter.clearSelection();
+                                mode.finish();
                                 break;
                             case R.id.share_todo:
+                                StringBuilder s = new StringBuilder("");
+                                for (Planner p : selected) {
+                                    s.append(p.todo + "\n");
+                                }
+//                                s.replace(s.length() - 1, s.length(), "");
+                                s.append("하라고 꼭 말해주세요");
+                                Intent intent = new Intent(Intent.ACTION_SEND);
+                                intent.setType("text/plain");
+                                intent.putExtra(Intent.EXTRA_TEXT, s.toString());
+                                intent.setPackage("com.kakao.talk");
+                                startActivity(intent);
+                                adapter.clearSelection();
+                                mode.finish();
                                 break;
                         }
                         return false;
@@ -208,9 +233,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         editText.setText("");
         adapter.notifyDataSetChanged();
     }
-    void getTodoList () {
+
+    void getTodoList() {
         db = helper.getReadableDatabase();
-        Log.d("datedate",db.toString());
+        Log.d("datedate", db.toString());
         Cursor c = db.query("planners", new String[]{"_id", "todo", "date", "done"}, null, null, null, null, null);
         while (c.moveToNext()) {
             Log.d("datedate", c.getString(1) + ", " + c.getString(2));
