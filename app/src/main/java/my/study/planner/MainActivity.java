@@ -15,6 +15,7 @@ import android.view.ActionMode;
 import android.view.MenuInflater;
 import android.view.View;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -29,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -38,6 +40,7 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -46,6 +49,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -55,11 +59,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SelectionAdapter adapter;
     EditText editText;
     SQLiteDatabase db;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        View decoView = getWindow().getDecorView();
+        decoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        actionBar = getSupportActionBar();
         lv = findViewById(R.id.lv);
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             ArrayList<Planner> selected = new ArrayList<>();
@@ -111,13 +119,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 mode.finish();
                                 break;
                             case R.id.share_todo:
-                                Log.d("sfsdfsa", "kkk10");
                                 StringBuilder s = new StringBuilder("");
                                 for (Planner p : selected) {
                                     s.append(p.todo + "\n");
                                 }
-//                                s.replace(s.length() - 1, s.length(), "");
-                                s.append("하라고 꼭 말해주세요");
+//                                s.replace(s.length() - 2, s.length(), " ");
+                                s.append("하라고 ");
                                 Intent intent = new Intent(MainActivity.this, KakaoTalkActivity.class);
                                 intent.putExtra("s", s.toString());
                                 startActivity(intent);
@@ -241,9 +248,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         db = helper.getReadableDatabase();
         Log.d("datedate", db.toString());
         Cursor c = db.query("planners", new String[]{"_id", "todo", "date", "done"}, null, null, null, null, null);
+        LocalDate date = LocalDate.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String today = date.format(dateTimeFormatter);
         while (c.moveToNext()) {
-            Log.d("datedate", c.getString(1) + ", " + c.getString(2));
-            al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3)));
+            if (c.getString(2).equals(today))
+                al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3)));
         }
         c.close();
         helper.close();

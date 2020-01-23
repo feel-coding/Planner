@@ -33,6 +33,8 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
+        View decoView = getWindow().getDecorView();
+        decoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         helper = new DBHelper(this);
         calendarView = findViewById(R.id.calendarView);
         calendarView.state().edit()

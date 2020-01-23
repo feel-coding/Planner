@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="messageType">
+        <item>꼭 말해줘</item>
+        <item>꼭 말해줘요</item>
+        <item>꼭 말해주세요</item>
+    </string-array>
+    <string-array name="where">
+        <item>이따가</item>
+        <item>집 가서</item>
+        <item>회사에서</item>
+        <item>학교에서</item>
+    </string-array>
+
+</resources>
