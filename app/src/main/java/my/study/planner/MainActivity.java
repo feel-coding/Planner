@@ -65,9 +65,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        View decoView = getWindow().getDecorView();
-        decoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        actionBar = getSupportActionBar();
         lv = findViewById(R.id.lv);
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             ArrayList<Planner> selected = new ArrayList<>();
