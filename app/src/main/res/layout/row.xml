@@ -3,11 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="40dp">
 
+    <CheckBox
+        android:visibility="gone"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <TextView
         android:layout_marginLeft="10dp"
         android:id="@+id/todo"
         android:layout_width="0dp"
+        android:layout_gravity="center_vertical"
         android:layout_height="wrap_content"
         android:layout_weight="4"
         android:background="@null"
@@ -15,12 +21,40 @@
         android:focusable="false"
         android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/addButton"
+    <RelativeLayout
+        android:layout_gravity="center_vertical"
         android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/check_box"
-        android:focusable="false" />
+        android:layout_height="40dp">
+        <Button
+            android:layout_centerInParent="true"
+            android:id="@+id/doneButton"
+            android:layout_width="20dp"
+            android:gravity="center_vertical"
+            android:layout_height="20dp"
+            android:background="@drawable/check_box"
+            android:focusable="false" />
+        <ImageView
+            android:layout_centerInParent="true"
+            android:layout_width="15dp"
+            android:src="@drawable/triangle"
+            android:visibility="invisible"
+            android:id="@+id/triangle"
+            android:layout_height="15dp" />
+        <ImageView
+            android:layout_centerInParent="true"
+            android:layout_width="15dp"
+            android:src="@drawable/x"
+            android:id="@+id/x"
+            android:visibility="invisible"
+            android:layout_height="15dp" />
+        <ImageView
+            android:layout_width="15dp"
+            android:visibility="invisible"
+            android:id="@+id/check"
+            android:src="@drawable/check"
+            android:layout_centerInParent="true"
+            android:layout_height="15dp" />
+    </RelativeLayout>
 
 
 </LinearLayout>

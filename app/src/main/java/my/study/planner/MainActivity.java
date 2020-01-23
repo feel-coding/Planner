@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ListView lv;
     DBHelper helper;
     ArrayList<Planner> al = new ArrayList<>();
-    SelectionAdapter adapter;
+    MyAdapter adapter;
     EditText editText;
     SQLiteDatabase db;
     ActionBar actionBar;
@@ -66,12 +66,81 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lv = findViewById(R.id.lv);
-        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        lv.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            int n = 0;
             ArrayList<Planner> selected = new ArrayList<>();
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+                if (checked) {
+                    adapter.setNewSelection(position, checked);
+                    selected.add(al.get(position));
+                    n++;
+                } else { //사용자가 선택했던 아이템을 다시 한 번 더 눌러서 취소할 경우
+                    adapter.removeSelection(position);
+                    selected.remove(al.get(position));
+                    n--;
+                }
+                mode.setTitle(n + "개 선택됨");
+            }
 
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL); //롱클릭일 때에만 복수 선택이 가능하도록 롱클릭 메소드 안에 넣음
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.contextual, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.delete_todo:
+                        db = helper.getWritableDatabase();
+                        for (Planner p : selected) {
+                            db.delete("planners", "_id=" + p.id, null);
+                            al.remove(p);
+                            adapter.notifyDataSetChanged();
+                        }
+                        n = 0;
+                        adapter.clearSelection();
+                        mode.finish();
+                        break;
+                    case R.id.share_todo:
+                        StringBuilder s = new StringBuilder("");
+                        for (Planner p : selected) {
+                            s.append(p.todo + "\n");
+                        }
+//                                s.replace(s.length() - 2, s.length(), " ");
+                        s.append("하라고 ");
+                        Intent intent = new Intent(MainActivity.this, KakaoTalkActivity.class);
+                        intent.putExtra("s", s.toString());
+                        startActivity(intent);
+                        selected = new ArrayList<>();
+                        n = 0;
+                        adapter.clearSelection();
+                        adapter.notifyDataSetChanged();
+                        mode.finish();
+                        break;
+                }
+                return true;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+        });
+        /*lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            ArrayList<Planner> selected = new ArrayList<>();
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
                 lv.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
                     int n = 0;
 
@@ -128,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 selected = new ArrayList<>();
                                 n = 0;
                                 adapter.clearSelection();
+                                adapter.notifyDataSetChanged();
                                 mode.finish();
                                 break;
                         }
@@ -141,10 +211,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
                 return false;
             }
-        });
+        });*/
         editText = findViewById(R.id.edit);
         helper = new DBHelper(this);
-        adapter = new SelectionAdapter(this, al, R.layout.row);
+        adapter = new MyAdapter(this, al, R.layout.row);
         lv.setAdapter(adapter);
         getTodoList();
         Toolbar toolbar = findViewById(R.id.toolbar);
