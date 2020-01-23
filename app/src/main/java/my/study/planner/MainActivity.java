@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     al.remove(p);
                                     adapter.notifyDataSetChanged();
                                 }
+                                n = 0;
                                 adapter.clearSelection();
                                 mode.finish();
                                 break;
@@ -120,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 intent.putExtra(Intent.EXTRA_TEXT, s.toString());
                                 intent.setPackage("com.kakao.talk");
                                 startActivity(intent);
+                                selected = new ArrayList<>();
+                                n = 0;
                                 adapter.clearSelection();
                                 mode.finish();
                                 break;
