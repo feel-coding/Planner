@@ -33,6 +33,7 @@ import android.view.Menu;
 import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -60,12 +61,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     EditText editText;
     SQLiteDatabase db;
     ActionBar actionBar;
+    Button add;
+    int mode = 0;
+    int selectedIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        add = findViewById(R.id.add);
         lv = findViewById(R.id.lv);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                editText.setText(al.get(position).todo);
+                editText.setHint("           할 일을 수정해보세요");
+                add.setText("수정");
+                mode = 1;
+                selectedIndex = position;
+            }
+        });
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lv.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             int n = 0;
@@ -122,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         startActivity(intent);
                         selected = new ArrayList<>();
                         n = 0;
+                        s = new StringBuilder("");
                         adapter.clearSelection();
                         adapter.notifyDataSetChanged();
                         mode.finish();
@@ -135,83 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
-        /*lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            ArrayList<Planner> selected = new ArrayList<>();
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-                lv.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-                    int n = 0;
-
-                    @Override
-                    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                        if (checked) {
-                            adapter.setNewSelection(position, checked);
-                            selected.add(al.get(position));
-                            n++;
-                        } else { //사용자가 선택했던 아이템을 다시 한 번 더 눌러서 취소할 경우
-                            adapter.removeSelection(position);
-                            selected.remove(al.get(position));
-                            n--;
-                        }
-                        mode.setTitle(n + "개 선택됨");
-                    }
-
-                    @Override
-                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                        MenuInflater inflater = getMenuInflater();
-                        inflater.inflate(R.menu.contextual, menu);
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.delete_todo:
-                                db = helper.getWritableDatabase();
-                                for (Planner p : selected) {
-                                    db.delete("planners", "_id=" + p.id, null);
-                                    al.remove(p);
-                                    adapter.notifyDataSetChanged();
-                                }
-                                n = 0;
-                                adapter.clearSelection();
-                                mode.finish();
-                                break;
-                            case R.id.share_todo:
-                                StringBuilder s = new StringBuilder("");
-                                for (Planner p : selected) {
-                                    s.append(p.todo + "\n");
-                                }
-//                                s.replace(s.length() - 2, s.length(), " ");
-                                s.append("하라고 ");
-                                Intent intent = new Intent(MainActivity.this, KakaoTalkActivity.class);
-                                intent.putExtra("s", s.toString());
-                                startActivity(intent);
-                                selected = new ArrayList<>();
-                                n = 0;
-                                adapter.clearSelection();
-                                adapter.notifyDataSetChanged();
-                                mode.finish();
-                                break;
-                        }
-                        return true;
-                    }
-
-                    @Override
-                    public void onDestroyActionMode(ActionMode mode) {
-
-                    }
-                });
-                return false;
-            }
-        });*/
         editText = findViewById(R.id.edit);
         helper = new DBHelper(this);
         adapter = new MyAdapter(this, al, R.layout.row);
@@ -299,14 +239,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String n = editText.getText().toString(); //getText는 String 타입이 아니라 CharSequence 타입이기 때문에
         values = new ContentValues();
         values.put("todo", n);
-        values.put("done", 0);
-        LocalDate date = LocalDate.now();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String d = date.format(dateTimeFormatter);
-        values.put("date", d);
-        long id = db.insert("planners", null, values);
-        Planner planner = new Planner(id, n, d, 0);
-        al.add(planner);
+        if (mode == 0) {
+            values.put("done", 0);
+            LocalDate date = LocalDate.now();
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String d = date.format(dateTimeFormatter);
+            values.put("date", d);
+            long id = db.insert("planners", null, values);
+            Planner planner = new Planner(id, n, d, 0);
+            al.add(planner);
+        }
+        else {
+            values.put("done", al.get(selectedIndex).done);
+            values.put("date", al.get(selectedIndex).date);
+            db.update("planners", values, "_id=" + al.get(selectedIndex).id, null);
+            al.get(selectedIndex).todo = editText.getText().toString();
+            mode = 0;
+            add.setText("추가");
+            editText.setHint("           추가할 할 일을 적어주세요");
+        }
         editText.setText("");
         adapter.notifyDataSetChanged();
     }

@@ -37,9 +37,10 @@
             android:layout_height="wrap_content" />
         <Button
             android:layout_width="wrap_content"
-            android:text="보내기"
+            android:text="카톡 보내기"
             android:layout_gravity="center"
             android:onClick="send"
+            android:background="@color/pastelYellow"
             android:layout_height="wrap_content" />
     </LinearLayout>
 

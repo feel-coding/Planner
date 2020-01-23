@@ -19,12 +19,13 @@
             android:paddingStart="20dp"
             android:background="@color/ivory"
             android:hint="           추가할 할 일을 적어주세요"
-            android:textColorHint="@color/white"
+            android:textColorHint="@color/gray"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
         <Button
             android:layout_weight="1"
             android:text="추가"
+            android:id="@+id/add"
             android:textColor="#ffffff"
             android:onClick="onClick"
             android:textSize="18dip"

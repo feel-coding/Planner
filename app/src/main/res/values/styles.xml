@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/pastelYellow</item>
         <item name="colorPrimaryDark">@color/pastelYellow</item>
         <item name="windowActionBarOverlay">true</item>
-        <item name="colorAccent">@color/lightYellow</item>
+        <item name="colorAccent">@color/pastelYellow</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
