@@ -9,7 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PastPlans"></activity>
+        <activity
+            android:name=".KakaoTalkActivity"
+            android:theme="@style/MyTheme"></activity>
+        <activity android:name=".PastPlans" />
         <activity android:name=".CalendarActivity" />
         <activity
             android:name=".MainActivity"

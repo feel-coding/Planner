@@ -34,6 +34,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -110,24 +111,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 mode.finish();
                                 break;
                             case R.id.share_todo:
+                                Log.d("sfsdfsa", "kkk10");
                                 StringBuilder s = new StringBuilder("");
                                 for (Planner p : selected) {
                                     s.append(p.todo + "\n");
                                 }
 //                                s.replace(s.length() - 1, s.length(), "");
                                 s.append("하라고 꼭 말해주세요");
-                                Intent intent = new Intent(Intent.ACTION_SEND);
-                                intent.setType("text/plain");
-                                intent.putExtra(Intent.EXTRA_TEXT, s.toString());
-                                intent.setPackage("com.kakao.talk");
+                                Log.d("sfsdfsa", "kkk1");
+                                Intent intent = new Intent(MainActivity.this, KakaoTalkActivity.class);
+                                Log.d("sfsdfsa", "kkk2");
+                                intent.putExtra("s", s.toString());
                                 startActivity(intent);
+                                Log.d("sfsdfsa", "kkk3");
+//                                Intent intent = new Intent(Intent.ACTION_SEND);
+//                                intent.setType("text/plain");
+//                                intent.putExtra(Intent.EXTRA_TEXT, s.toString());
+//                                intent.setPackage("com.kakao.talk");
+//                                startActivity(intent);
                                 selected = new ArrayList<>();
                                 n = 0;
                                 adapter.clearSelection();
                                 mode.finish();
                                 break;
                         }
-                        return false;
+                        return true;
                     }
 
                     @Override
