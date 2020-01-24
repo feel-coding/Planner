@@ -18,7 +18,7 @@
             android:height="45dp"
             android:paddingStart="20dp"
             android:background="@color/ivory"
-            android:hint="           추가할 할 일을 적어주세요"
+            android:hint="         추가할 할 일을 적어주세요"
             android:textColorHint="@color/gray"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />

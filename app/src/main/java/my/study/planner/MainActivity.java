@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 editText.setText(al.get(position).todo);
-                editText.setHint("           할 일을 수정해보세요");
+                editText.setHint("         할 일을 수정해보세요");
                 add.setText("수정");
                 mode = 1;
                 selectedIndex = position;
@@ -163,7 +163,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                Intent i = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(i);
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
