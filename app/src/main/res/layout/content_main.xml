@@ -10,30 +10,32 @@
     tools:showIn="@layout/app_bar_main">
 
     <LinearLayout
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
-            android:layout_weight="4"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
             android:id="@+id/edit"
             android:height="45dp"
             android:paddingStart="20dp"
-            android:background="@color/ivory"
+            android:background="@drawable/search_window"
             android:hint="         추가할 할 일을 적어주세요"
             android:textColorHint="@color/gray"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
+            android:layout_weight="4"
             android:layout_height="wrap_content" />
         <Button
-            android:layout_weight="1"
-            android:text="추가"
+            android:layout_marginTop="5dp"
             android:id="@+id/add"
             android:textColor="#ffffff"
             android:onClick="onClick"
-            android:textSize="18dip"
-            android:background="@drawable/round_button"
-            android:layout_width="0dp"
+            android:background="@drawable/add"
+            android:layout_width="45dp"
             android:layout_height="wrap_content" />
     </LinearLayout>
     <ListView
+        android:layout_marginTop="10dp"
         android:id="@+id/lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

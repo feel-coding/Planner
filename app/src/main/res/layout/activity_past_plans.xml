@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:titleTextColor="#000000"
-        app:title=""/>
+        app:title="sdfsfsdf"/>
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"

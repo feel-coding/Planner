@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 editText.setText(al.get(position).todo);
                 editText.setHint("         할 일을 수정해보세요");
-                add.setText("수정");
+                add.setBackgroundResource(R.drawable.update);
                 mode = 1;
                 selectedIndex = position;
             }
@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             db.update("planners", values, "_id=" + al.get(selectedIndex).id, null);
             al.get(selectedIndex).todo = editText.getText().toString();
             mode = 0;
-            add.setText("추가");
+            add.setBackgroundResource(R.drawable.add);
             editText.setHint("           추가할 할 일을 적어주세요");
         }
         editText.setText("");
