@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MyAdapter adapter;
     EditText editText;
     SQLiteDatabase db;
-    ActionBar actionBar;
+    Toolbar toolbar;
     Button add;
     int mode = 0;
     int selectedIndex;
@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 MenuInflater inflater = getMenuInflater();
                 inflater.inflate(R.menu.contextual, menu);
+                toolbar.setVisibility(View.GONE);
                 return true;
             }
 
@@ -148,7 +149,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-
+                adapter.clearSelection();
+                n = 0;
+                selected = new ArrayList<>();
+                toolbar.setVisibility(View.VISIBLE);
             }
         });
 
@@ -157,7 +161,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter = new MyAdapter(this, al, R.layout.row);
         lv.setAdapter(adapter);
         getTodoList();
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.main_toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -191,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
         return true;
     }
 
@@ -232,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
     public void onClick(View view) {
