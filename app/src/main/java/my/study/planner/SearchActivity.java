@@ -30,7 +30,7 @@ public class SearchActivity extends AppCompatActivity {
     String searchWord = "";
     DBHelper helper;
     ArrayList<Planner> al;
-    MyAdapter adapter;
+    DateAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class SearchActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         al = new ArrayList<>();
         lv = findViewById(R.id.search_result);
-        adapter = new MyAdapter(this, al, R.layout.row);
+        adapter = new DateAdapter(this, al, R.layout.row_with_date);
         lv.setAdapter(adapter);
         helper = new DBHelper(this);
         editText = findViewById(R.id.search_edit);
@@ -51,7 +51,7 @@ public class SearchActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 searchWord = editText.getText().toString();
                 al = new ArrayList<>();
-                adapter = new MyAdapter(SearchActivity.this, al, R.layout.row);
+                adapter = new DateAdapter(SearchActivity.this, al, R.layout.row_with_date);
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     Log.d("scsc", searchWord);
                     if (searchWord.equals("")) {
