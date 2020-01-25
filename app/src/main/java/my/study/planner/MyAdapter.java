@@ -144,6 +144,7 @@ public class MyAdapter extends BaseAdapter {
         return al.size();
     }
 
+
     @Override
     public Object getItem(int position) {
         return al.get(position);

@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".SearchActivity">
 
     <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,25 +16,21 @@
 
 
         <EditText
+            android:id="@+id/search_edit"
             android:layout_width="290dp"
             android:layout_height="55dp"
             android:layout_marginRight="50dp"
-            android:imeOptions="actionSearch"
-            android:id="@+id/search_edit"
-            android:inputType="text"
             android:background="@null"
-            android:hint="검색하실 내용을 입력하세요" />
+            android:hint="검색하실 내용을 입력하세요"
+            android:imeOptions="actionSearch"
+            android:inputType="text" />
 
     </androidx.appcompat.widget.Toolbar>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ListView
-            android:id="@+id/search_result"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </ListView>
 
-    </ScrollView>
+    <ListView
+        android:id="@+id/search_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 
 </LinearLayout>
