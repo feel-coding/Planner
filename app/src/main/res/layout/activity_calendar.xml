@@ -20,4 +20,9 @@
         android:layout_height="380dp"
         app:mcv_selectionColor="@color/pastelYellow"
         app:mcv_showOtherDates="defaults"/>
+
+    <ListView
+        android:id="@+id/calendarList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>

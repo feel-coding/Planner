@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.ListView;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
@@ -32,6 +34,8 @@ public class CalendarActivity extends AppCompatActivity {
     SQLiteOpenHelper helper;
     SQLiteDatabase db;
     ArrayList<Planner> al = new ArrayList<>();
+    MyAdapter adapter;
+    ListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,12 +50,18 @@ public class CalendarActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
         actionBar.setHomeAsUpIndicator(R.drawable.backbutton);
+
+        listView = findViewById(R.id.calendarList);
+        adapter = new MyAdapter(this, al, R.layout.row);
+        listView.setAdapter(adapter);
         helper = new DBHelper(this);
+        db = helper.getReadableDatabase();
+
         calendarView = findViewById(R.id.calendarView);
         calendarView.state().edit()
                 .setFirstDayOfWeek(Calendar.SUNDAY)
-                .setMinimumDate(CalendarDay.from(2017, 0, 1)) //0월이 1월
-                .setMaximumDate(CalendarDay.from(2030, 11, 31))
+                .setMinimumDate(CalendarDay.from(2020, 0, 1)) //0월이 1월
+                .setMaximumDate(CalendarDay.from(2040, 11, 31)) //month가 11이면 12월
                 .setCalendarDisplayMode(CalendarMode.MONTHS)
                 .commit();
         calendarView.addDecorators(
@@ -62,10 +72,19 @@ public class CalendarActivity extends AppCompatActivity {
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                al.clear();
                 String selectedDay = dateFormat.format(date.getDate());
-                Intent i = new Intent(CalendarActivity.this, PastPlans.class);
-                i.putExtra("date", selectedDay);
-                startActivity(i);
+//                Intent i = new Intent(CalendarActivity.this, PastPlans.class);
+//                i.putExtra("date", selectedDay);
+//                startActivity(i);
+                Cursor c = db.rawQuery("select * from planners", null);
+                while (c.moveToNext()) {
+                    Planner planner = new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4));
+                    if (selectedDay.equals(c.getString(2)))
+                        al.add(planner);
+                }
+                adapter.notifyDataSetChanged();
+                c.close();
             }
         });
     }

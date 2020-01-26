@@ -26,8 +26,9 @@ public class TodayDecorator implements DayViewDecorator {
 
     @Override
     public void decorate(DayViewFacade view) {
-        view.addSpan(new StyleSpan(Typeface.BOLD_ITALIC));
-        view.addSpan(new ForegroundColorSpan(Color.DKGRAY));
+
+        view.addSpan(new StyleSpan(Typeface.BOLD));
+        view.addSpan(new ForegroundColorSpan(Color.BLACK));
         view.addSpan(new RelativeSizeSpan(1.6f));
 
     }

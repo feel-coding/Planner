@@ -293,17 +293,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String n = editText.getText().toString(); //getText는 String 타입이 아니라 CharSequence 타입이기 때문에
         values = new ContentValues();
         values.put("todo", n);
+        switch (cat) {
+            case "할 일":
+                catNum = 0; break;
+            case "업무":
+                catNum = 1; break;
+            case "공부":
+                catNum = 2; break;
+            case "약속":
+                catNum = 3; break;
+        }
+        values.put("category", catNum);
         if (mode == 0) {
-            switch (cat) {
-                case "할 일":
-                    catNum = 0; break;
-                case "업무":
-                    catNum = 1; break;
-                case "공부":
-                    catNum = 2; break;
-                case "약속":
-                    catNum = 3; break;
-            }
             values.put("done", 0);
             LocalDate date = LocalDate.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -319,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             values.put("date", al.get(selectedIndex).date);
             db.update("planners", values, "_id=" + al.get(selectedIndex).id, null);
             al.get(selectedIndex).todo = editText.getText().toString();
+            al.get(selectedIndex).category = catNum;
             mode = 0;
             add.setBackgroundResource(R.drawable.add);
             editText.setHint("할 일을 추가해보세요");

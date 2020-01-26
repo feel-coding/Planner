@@ -50,8 +50,9 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 searchWord = editText.getText().toString();
-                al = new ArrayList<>();
-                adapter = new DateAdapter(SearchActivity.this, al, R.layout.row_with_date);
+                al.clear();
+//                al = new ArrayList<>();
+//                adapter = new DateAdapter(SearchActivity.this, al, R.layout.row_with_date);
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     Log.d("scsc", searchWord);
                     if (searchWord.equals("")) {
