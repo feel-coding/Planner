@@ -33,9 +33,11 @@ import android.view.Menu;
 import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Button add;
     int mode = 0;
     int selectedIndex;
+    ArrayAdapter<String> categoryAdapter;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         add = findViewById(R.id.add);
         lv = findViewById(R.id.lv);
+        spinner = findViewById(R.id.category);
+        categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new String[]{"할 일", "업무일정", "공부", "약속"});
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        spinner.setAdapter(categoryAdapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
