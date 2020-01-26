@@ -10,6 +10,8 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.MenuInflater;
@@ -85,7 +87,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         category = new String[]{"할 일", "업무", "공부", "약속"};
         categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, category);
         spinner.setAdapter(categoryAdapter);
+        editText = findViewById(R.id.edit);
+        helper = new DBHelper(this);
+        adapter = new MyAdapter(this, al, R.layout.row);
+        lv.setAdapter(adapter);
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -185,10 +192,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        editText = findViewById(R.id.edit);
-        helper = new DBHelper(this);
-        adapter = new MyAdapter(this, al, R.layout.row);
-        lv.setAdapter(adapter);
         getTodoList();
         toolbar = findViewById(R.id.main_toolbar);
         toolbar.setTitle("");
@@ -288,6 +291,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void onClick(View view) {
+        if(editText.getText().toString().equals("")) {
+            Toast.makeText(MainActivity.this, "할 일을 입력해주세요", Toast.LENGTH_SHORT).show();
+            return;
+        }
         db = helper.getWritableDatabase();
         ContentValues values;
         String n = editText.getText().toString(); //getText는 String 타입이 아니라 CharSequence 타입이기 때문에
