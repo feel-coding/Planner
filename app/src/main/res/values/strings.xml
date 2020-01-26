@@ -13,4 +13,5 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="category">카테고리를 선택하세요</string>
 </resources>

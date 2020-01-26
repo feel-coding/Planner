@@ -44,7 +44,7 @@ public class PastPlans extends AppCompatActivity {
         Cursor c = db.rawQuery("select * from planners", null);
         while (c.moveToNext()) {
             Log.d("datedate", "id: " + c.getLong(0) + ", todo: " +  c.getString(1) + ", date: " + c.getString(2));
-            Planner planner = new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3));
+            Planner planner = new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4));
             if (date.equals(c.getString(2)))
                 al.add(planner);
         }

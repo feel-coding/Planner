@@ -68,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     int selectedIndex;
     ArrayAdapter<String> categoryAdapter;
     Spinner spinner;
+    long pressedTime;
+    String cat;
+    int catNum;
+    String[] category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,17 +80,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         add = findViewById(R.id.add);
         lv = findViewById(R.id.lv);
         spinner = findViewById(R.id.category);
-        categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new String[]{"할 일", "업무일정", "공부", "약속"});
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        category = new String[]{"할 일", "업무", "공부", "약속"};
+        categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, category);
         spinner.setAdapter(categoryAdapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 editText.setText(al.get(position).todo);
-                editText.setHint("         할 일을 수정해보세요");
+                editText.setHint("할 일을 수정해보세요");
                 add.setBackgroundResource(R.drawable.update);
                 mode = 1;
                 selectedIndex = position;
+            }
+        });
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                cat = categoryAdapter.getItem(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -188,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        Log.d("cccc", "6");
     }
 
     @Override
@@ -196,7 +212,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (System.currentTimeMillis() - pressedTime < 20000) {
+                finishAffinity();
+                return;
+            }
+            Toast.makeText(this, "종료하려면 한번 더 눌러주세요", Toast.LENGTH_SHORT).show();
+            pressedTime = System.currentTimeMillis();
         }
     }
 
@@ -260,13 +281,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         values = new ContentValues();
         values.put("todo", n);
         if (mode == 0) {
+            switch (cat) {
+                case "할 일":
+                    catNum = 0; break;
+                case "업무":
+                    catNum = 1; break;
+                case "공부":
+                    catNum = 2; break;
+                case "약속":
+                    catNum = 3; break;
+            }
             values.put("done", 0);
             LocalDate date = LocalDate.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String d = date.format(dateTimeFormatter);
             values.put("date", d);
+            values.put("category", catNum);
             long id = db.insert("planners", null, values);
-            Planner planner = new Planner(id, n, d, 0);
+            Planner planner = new Planner(id, n, d, 0, catNum);
             al.add(planner);
         }
         else {
@@ -276,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             al.get(selectedIndex).todo = editText.getText().toString();
             mode = 0;
             add.setBackgroundResource(R.drawable.add);
-            editText.setHint("           추가할 할 일을 적어주세요");
+            editText.setHint("추가할 할 일을 적어주세요");
         }
         editText.setText("");
         adapter.notifyDataSetChanged();
@@ -285,13 +317,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     void getTodoList() {
         db = helper.getReadableDatabase();
         Log.d("datedate", db.toString());
-        Cursor c = db.query("planners", new String[]{"_id", "todo", "date", "done"}, null, null, null, null, null);
+        Cursor c = db.query("planners", new String[]{"_id", "todo", "date", "done", "category"}, null, null, null, null, null);
         LocalDate date = LocalDate.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String today = date.format(dateTimeFormatter);
         while (c.moveToNext()) {
             if (c.getString(2).equals(today))
-                al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3)));
+                al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4)));
         }
         c.close();
         helper.close();

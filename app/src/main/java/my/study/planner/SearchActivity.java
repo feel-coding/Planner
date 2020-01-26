@@ -63,8 +63,7 @@ public class SearchActivity extends AppCompatActivity {
                         while (c.moveToNext()) {
                             String s = c.getString(1);
                             if (s.contains(searchWord)) {
-                                Log.d("scsc", "contains 문 진입 " + adapter.getCount() + "개");
-                                al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3)));
+                                al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4)));
                             }
                         }
                         Log.d("scsc", "" + al);

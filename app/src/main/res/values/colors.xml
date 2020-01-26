@@ -8,4 +8,8 @@
     <color name="lightYellow">#fcf4d9</color>
     <color name="ivory">#fcf9ed</color>
     <color name="gray">#b8b6b2</color>
+    <color name="red">#FF0000</color>
+    <color name="green">#00b831</color>
+    <color name="blue">#0085eb</color>
+    <color name="purple">#8800ff</color>
 </resources>

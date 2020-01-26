@@ -66,6 +66,25 @@ public class MyAdapter extends BaseAdapter {
         TextView todoField = view.findViewById(R.id.todo);
         todoField.setText(al.get(position).todo);
         Button doneButton = view.findViewById(R.id.doneButton);
+        TextView categoryFlag = view.findViewById(R.id.categoryFlag);
+        switch (al.get(position).category) {
+            case 0:
+                categoryFlag.setText("할 일");
+                categoryFlag.setBackgroundColor(view.getResources().getColor(R.color.red));
+                break;
+            case 1:
+                categoryFlag.setText("업무");
+                categoryFlag.setBackgroundColor(view.getResources().getColor(R.color.green));
+                break;
+            case 2:
+                categoryFlag.setText("공부");
+                categoryFlag.setBackgroundColor(view.getResources().getColor(R.color.blue));
+                break;
+            case 3:
+                categoryFlag.setText("약속");
+                categoryFlag.setBackgroundColor(view.getResources().getColor(R.color.purple));
+                break;
+        }
         //아무것도 표시 없는건 0, 체크는 1, 세모는 2, x는 3
         final ImageView check = view.findViewById(R.id.check);
         final ImageView triangle = view.findViewById(R.id.triangle);

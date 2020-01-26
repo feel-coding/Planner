@@ -18,6 +18,8 @@
         <Spinner
             android:layout_width="100dp"
             android:id="@+id/category"
+            android:spinnerMode="dialog"
+            android:prompt="@string/category"
             android:layout_height="45dp"/>
         <EditText
             android:layout_marginTop="5dp"
@@ -26,7 +28,7 @@
             android:height="45dp"
             android:paddingStart="20dp"
             android:background="@drawable/search_window"
-            android:hint="   추가할 할 일을 적어주세요"
+            android:hint="할 일을 추가해보세요"
             android:textColorHint="@color/gray"
             android:layout_width="match_parent"
             android:layout_weight="4"
