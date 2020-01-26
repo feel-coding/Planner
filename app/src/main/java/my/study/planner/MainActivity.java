@@ -31,6 +31,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String cat;
     int catNum;
     String[] category;
+    InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         category = new String[]{"할 일", "업무", "공부", "약속"};
         categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, category);
         spinner.setAdapter(categoryAdapter);
+        imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -91,6 +94,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 add.setBackgroundResource(R.drawable.update);
                 mode = 1;
                 selectedIndex = position;
+                editText.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.showSoftInput(editText, 0);
             }
         });
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -211,7 +217,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        if (mode == 1) {
+            mode = 0;
+            add.setBackgroundResource(R.drawable.add);
+            editText.setHint("할 일을 추가해보세요");
+            editText.setText("");
+        }
+        else {
             if (System.currentTimeMillis() - pressedTime < 20000) {
                 finishAffinity();
                 return;
@@ -308,10 +321,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             al.get(selectedIndex).todo = editText.getText().toString();
             mode = 0;
             add.setBackgroundResource(R.drawable.add);
-            editText.setHint("추가할 할 일을 적어주세요");
+            editText.setHint("할 일을 추가해보세요");
         }
         editText.setText("");
         adapter.notifyDataSetChanged();
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
     void getTodoList() {

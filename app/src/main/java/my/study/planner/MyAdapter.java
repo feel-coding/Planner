@@ -70,19 +70,19 @@ public class MyAdapter extends BaseAdapter {
         switch (al.get(position).category) {
             case 0:
                 categoryFlag.setText("할 일");
-                categoryFlag.setBackgroundColor(view.getResources().getColor(R.color.red));
+                categoryFlag.setBackground(view.getResources().getDrawable(R.drawable.red_round_tag));
                 break;
             case 1:
                 categoryFlag.setText("업무");
-                categoryFlag.setBackgroundColor(view.getResources().getColor(R.color.green));
+                categoryFlag.setBackground(view.getResources().getDrawable(R.drawable.green_round_tag));
                 break;
             case 2:
                 categoryFlag.setText("공부");
-                categoryFlag.setBackgroundColor(view.getResources().getColor(R.color.blue));
+                categoryFlag.setBackground(view.getResources().getDrawable(R.drawable.blue_round_tag));
                 break;
             case 3:
                 categoryFlag.setText("약속");
-                categoryFlag.setBackgroundColor(view.getResources().getColor(R.color.purple));
+                categoryFlag.setBackground(view.getResources().getDrawable(R.drawable.purple_round_tag));
                 break;
         }
         //아무것도 표시 없는건 0, 체크는 1, 세모는 2, x는 3

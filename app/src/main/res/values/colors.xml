@@ -12,4 +12,8 @@
     <color name="green">#00b831</color>
     <color name="blue">#0085eb</color>
     <color name="purple">#8800ff</color>
+    <color name="pastelRed">#f0a69c</color>
+    <color name="pastelGreen">#9adbbc</color>
+    <color name="pastelBlue">#8eb4ed</color>
+    <color name="pastelPurple">#9c9cd9</color>
 </resources>
