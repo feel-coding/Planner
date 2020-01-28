@@ -466,16 +466,19 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
         android:layout_height="60dp">
         <EditText
-            android:layout_marginTop="10dp"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
+            android:id="@+id/every_editText"
             android:layout_weight="4"
+            android:textSize="16sp"
+            android:layout_marginLeft="5dp"
             android:layout_width="match_parent"
             android:background="@drawable/search_window"
             android:hint="  주기적으로 해야 하는 일을 추가해보세요"
-            android:layout_height="60dp" />
+            android:layout_height="50dp" />
         <Button
             android:layout_marginTop="5dp"
             android:id="@+id/add"
