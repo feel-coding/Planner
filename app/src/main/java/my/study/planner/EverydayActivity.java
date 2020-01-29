@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.Toast;
 
 public class EverydayActivity extends AppCompatActivity {
 
@@ -51,6 +53,10 @@ public class EverydayActivity extends AppCompatActivity {
     Button twentyseven;
     Button twentyeight;
     EditText edit;
+    int mode = -1; //0은 매일, 1은 매주, 2는 매달
+    int selectedDay = -1;
+    int selectedDate = -1;
+    ListView lv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +103,7 @@ public class EverydayActivity extends AppCompatActivity {
         twentyseven = findViewById(R.id.twentyseven);
         twentyeight = findViewById(R.id.twentyeight);
         edit = findViewById(R.id.every_editText);
+        lv = findViewById(R.id.everylist);
     }
     public void every(View v){
         switch (v.getId()) {
@@ -107,6 +114,7 @@ public class EverydayActivity extends AppCompatActivity {
                 everyday.setBackgroundResource(R.drawable.round_pastel_yellow);
                 everyWeek.setBackgroundResource(R.drawable.grey_round_button);
                 everyMonth.setBackgroundResource(R.drawable.grey_round_button);
+                mode = 0;
                 break;
             case R.id.everyweek:
                 ll.setVisibility(View.VISIBLE);
@@ -143,6 +151,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                mode = 1;
                 break;
             case R.id.everymonth:
                 ll.setVisibility(View.GONE);
@@ -158,6 +167,7 @@ public class EverydayActivity extends AppCompatActivity {
                 friday.setBackgroundResource(R.drawable.grey_round_button);
                 saturday.setBackgroundResource(R.drawable.grey_round_button);
                 sunday.setBackgroundResource(R.drawable.grey_round_button);
+                mode = 2;
                 break;
             case R.id.monday:
                 edit.setHint("매 주 월요일마다 해야하는 일을 추가해보세요");
@@ -168,6 +178,7 @@ public class EverydayActivity extends AppCompatActivity {
                 friday.setBackgroundResource(R.drawable.grey_round_button);
                 saturday.setBackgroundResource(R.drawable.grey_round_button);
                 sunday.setBackgroundResource(R.drawable.grey_round_button);
+                selectedDay = 0;
                 break;
             case R.id.tuesday:
                 edit.setHint("매 주 화요일마다 해야하는 일을 추가해보세요");
@@ -178,6 +189,7 @@ public class EverydayActivity extends AppCompatActivity {
                 friday.setBackgroundResource(R.drawable.grey_round_button);
                 saturday.setBackgroundResource(R.drawable.grey_round_button);
                 sunday.setBackgroundResource(R.drawable.grey_round_button);
+                selectedDay = 1;
                 break;
             case R.id.wednesday:
                 edit.setHint("매 주 수요일마다 해야하는 일을 추가해보세요");
@@ -188,6 +200,7 @@ public class EverydayActivity extends AppCompatActivity {
                 friday.setBackgroundResource(R.drawable.grey_round_button);
                 saturday.setBackgroundResource(R.drawable.grey_round_button);
                 sunday.setBackgroundResource(R.drawable.grey_round_button);
+                selectedDay = 2;
                 break;
             case R.id.thursday:
                 edit.setHint("매 주 목요일마다 해야하는 일을 추가해보세요");
@@ -198,6 +211,7 @@ public class EverydayActivity extends AppCompatActivity {
                 friday.setBackgroundResource(R.drawable.grey_round_button);
                 saturday.setBackgroundResource(R.drawable.grey_round_button);
                 sunday.setBackgroundResource(R.drawable.grey_round_button);
+                selectedDay = 3;
                 break;
             case R.id.friday:
                 edit.setHint("매 주 금요일마다 해야하는 일을 추가해보세요");
@@ -208,6 +222,7 @@ public class EverydayActivity extends AppCompatActivity {
                 monday.setBackgroundResource(R.drawable.grey_round_button);
                 saturday.setBackgroundResource(R.drawable.grey_round_button);
                 sunday.setBackgroundResource(R.drawable.grey_round_button);
+                selectedDay = 4;
                 break;
             case R.id.saturday:
                 edit.setHint("매 주 토요일마다 해야하는 일을 추가해보세요");
@@ -218,6 +233,7 @@ public class EverydayActivity extends AppCompatActivity {
                 friday.setBackgroundResource(R.drawable.grey_round_button);
                 monday.setBackgroundResource(R.drawable.grey_round_button);
                 sunday.setBackgroundResource(R.drawable.grey_round_button);
+                selectedDay = 5;
                 break;
             case R.id.sunday:
                 edit.setHint("매 주 일요일마다 해야하는 일을 추가해보세요");
@@ -228,6 +244,7 @@ public class EverydayActivity extends AppCompatActivity {
                 friday.setBackgroundResource(R.drawable.grey_round_button);
                 saturday.setBackgroundResource(R.drawable.grey_round_button);
                 monday.setBackgroundResource(R.drawable.grey_round_button);
+                selectedDay = 6;
                 break;
             case R.id.one:
                 edit.setHint("매 월 1일마다 해야하는 일을 추가해보세요");
@@ -259,6 +276,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 1;
                 break;
             case R.id.two:
                 edit.setHint("매 월 2일마다 해야하는 일을 추가해보세요");
@@ -290,6 +308,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 2;
                 break;
             case R.id.three:
                 edit.setHint("매 월 3일마다 해야하는 일을 추가해보세요");
@@ -321,6 +340,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 3;
                 break;
             case R.id.four:
                 edit.setHint("매 월 4일마다 해야하는 일을 추가해보세요");
@@ -352,6 +372,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 4;
                 break;
             case R.id. five:
                 edit.setHint("매 월 5일마다 해야하는 일을 추가해보세요");
@@ -383,6 +404,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 5;
                 break;
             case R.id.six:
                 edit.setHint("매 월 6일마다 해야하는 일을 추가해보세요");
@@ -414,6 +436,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 6;
                 break;
             case R.id.seven:
                 edit.setHint("매 월 7일마다 해야하는 일을 추가해보세요");
@@ -445,6 +468,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 7;
                 break;
             case R.id.eight:
                 edit.setHint("매 월 8일마다 해야하는 일을 추가해보세요");
@@ -476,6 +500,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 8;
                 break;
             case R.id.nine:
                 edit.setHint("매 월 9일마다 해야하는 일을 추가해보세요");
@@ -507,6 +532,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 9;
                 break;
             case R.id.ten:
                 edit.setHint("매 월 10일마다 해야하는 일을 추가해보세요");
@@ -538,6 +564,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 10;
                 break;
             case R.id.eleven:
                 edit.setHint("매 월 11일마다 해야하는 일을 추가해보세요");
@@ -569,6 +596,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 11;
                 break;
             case R.id.tweleve:
                 edit.setHint("매 월 12일마다 해야하는 일을 추가해보세요");
@@ -600,6 +628,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 12;
                 break;
             case R.id.thirteen:
                 edit.setHint("매 월 13일마다 해야하는 일을 추가해보세요");
@@ -631,6 +660,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 13;
                 break;
             case R.id.fourteen:
                 edit.setHint("매 월 14일마다 해야하는 일을 추가해보세요");
@@ -662,6 +692,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 14;
                 break;
             case R.id.fifteen:
                 edit.setHint("매 월 15일마다 해야하는 일을 추가해보세요");
@@ -693,6 +724,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 15;
                 break;
             case R.id.sixteen:
                 edit.setHint("매 월 16일마다 해야하는 일을 추가해보세요");
@@ -724,6 +756,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 16;
                 break;
             case R.id.seventeen:
                 edit.setHint("매 월 17일마다 해야하는 일을 추가해보세요");
@@ -755,6 +788,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 17;
                 break;
             case R.id.eighteen:
                 edit.setHint("매 월 18일마다 해야하는 일을 추가해보세요");
@@ -786,6 +820,8 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 18;
+
                 break;
             case R.id.nineteen:
                 edit.setHint("매 월 19일마다 해야하는 일을 추가해보세요");
@@ -817,6 +853,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 19;
                 break;
             case R.id.twenty:
                 edit.setHint("매 월 20일마다 해야하는 일을 추가해보세요");
@@ -848,6 +885,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 20;
                 break;
             case R.id.twentyone:
                 edit.setHint("매 월 21일마다 해야하는 일을 추가해보세요");
@@ -879,6 +917,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 21;
                 break;
             case R.id.twentytwo:
                 edit.setHint("매 월 22일마다 해야하는 일을 추가해보세요");
@@ -910,6 +949,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 22;
                 break;
             case R.id.twentythree:
                 edit.setHint("매 월 23일마다 해야하는 일을 추가해보세요");
@@ -941,6 +981,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 23;
                 break;
             case R.id.twentyfour:
                 edit.setHint("매 월 24일마다 해야하는 일을 추가해보세요");
@@ -972,6 +1013,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 24;
                 break;
             case R.id.twentyfive:
                 edit.setHint("매 월 25일마다 해야하는 일을 추가해보세요");
@@ -1003,6 +1045,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 25;
                 break;
             case R.id.twentysix:
                 edit.setHint("매 월 26일마다 해야하는 일을 추가해보세요");
@@ -1034,6 +1077,7 @@ public class EverydayActivity extends AppCompatActivity {
                 one.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 26;
                 break;
             case R.id.twentyseven:
                 edit.setHint("매 월 27일마다 해야하는 일을 추가해보세요");
@@ -1065,6 +1109,7 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 one.setBackgroundResource(R.drawable.grey_box_button);
                 twentyeight.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 27;
                 break;
             case R.id.twentyeight:
                 edit.setHint("매 월 28일마다 해야하는 일을 추가해보세요");
@@ -1096,7 +1141,32 @@ public class EverydayActivity extends AppCompatActivity {
                 twentysix.setBackgroundResource(R.drawable.grey_box_button);
                 twentyseven.setBackgroundResource(R.drawable.grey_box_button);
                 one.setBackgroundResource(R.drawable.grey_box_button);
+                selectedDate = 28;
                 break;
+        }
+    }
+    public void add(View v) {
+        if(mode == 0) { //매일
+
+        }
+        else if (mode == 1) { //매주
+            if(selectedDay == -1) {
+                Toast.makeText(this, "요일을 선택해주세요", Toast.LENGTH_SHORT).show();
+            }
+            else {
+
+            }
+        }
+        else if (mode == 2) { //매달
+            if(selectedDate == -1) {
+                Toast.makeText(this, "날짜를 선택해주세요", Toast.LENGTH_SHORT).show();
+            }
+            else {
+
+            }
+        }
+        else {
+            Toast.makeText(this, "반복할 주기를 선택해주세요", Toast.LENGTH_SHORT).show();
         }
     }
 }

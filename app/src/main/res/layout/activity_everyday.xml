@@ -483,12 +483,16 @@
             android:layout_marginTop="5dp"
             android:id="@+id/add"
             android:textColor="#ffffff"
+            android:onClick="add"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:background="@drawable/add"
             android:layout_width="45dp"
             android:layout_height="wrap_content" />
     </LinearLayout>
-
+    <ListView
+        android:id="@+id/everylist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
