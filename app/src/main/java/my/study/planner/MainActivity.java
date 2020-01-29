@@ -86,9 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         lv = findViewById(R.id.lv);
         spinner = findViewById(R.id.category);
         category = new String[]{"할 일", "업무", "공부", "약속"};
-        categoryAdapter
-
-                = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, category);
+        categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, category);
         spinner.setAdapter(categoryAdapter);
         editText = findViewById(R.id.edit);
         helper = new DBHelper(this);

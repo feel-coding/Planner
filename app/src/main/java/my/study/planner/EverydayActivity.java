@@ -2,13 +2,22 @@ package my.study.planner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class EverydayActivity extends AppCompatActivity {
 
@@ -57,6 +66,14 @@ public class EverydayActivity extends AppCompatActivity {
     int selectedDay = -1;
     int selectedDate = -1;
     ListView lv;
+    Spinner spinner;
+    String cat;
+    EveryAdapter adapter;
+    ArrayList<EveryPlanner> al = new ArrayList<>();
+    ArrayAdapter<String> categoryAdapter;
+    String[] category;
+    SQLiteDatabase db;
+    EveryHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +121,22 @@ public class EverydayActivity extends AppCompatActivity {
         twentyeight = findViewById(R.id.twentyeight);
         edit = findViewById(R.id.every_editText);
         lv = findViewById(R.id.everylist);
+        helper = new EveryHelper(this);
+        adapter = new EveryAdapter(this, al, R.layout.every_row);
+        category = new String[]{"할 일", "업무", "공부", "약속"};
+        categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, category);
+        spinner = findViewById(R.id.everycategory);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                cat = categoryAdapter.getItem(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
     public void every(View v){
         switch (v.getId()) {
@@ -1146,12 +1179,14 @@ public class EverydayActivity extends AppCompatActivity {
         }
     }
     public void add(View v) {
+        int catNum = 0;
         if(mode == 0) { //매일
 
         }
         else if (mode == 1) { //매주
             if(selectedDay == -1) {
                 Toast.makeText(this, "요일을 선택해주세요", Toast.LENGTH_SHORT).show();
+                return;
             }
             else {
 
@@ -1160,6 +1195,7 @@ public class EverydayActivity extends AppCompatActivity {
         else if (mode == 2) { //매달
             if(selectedDate == -1) {
                 Toast.makeText(this, "날짜를 선택해주세요", Toast.LENGTH_SHORT).show();
+                return;
             }
             else {
 
@@ -1167,6 +1203,34 @@ public class EverydayActivity extends AppCompatActivity {
         }
         else {
             Toast.makeText(this, "반복할 주기를 선택해주세요", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        db = helper.getWritableDatabase();
+        ContentValues values;
+        String n = edit.getText().toString(); //getText는 String 타입이 아니라 CharSequence 타입을 반환한다. 따라서 String으로 바꿔줌
+        values = new ContentValues();
+        values.put("todo", n);
+        switch (cat) {
+            case "할 일":
+                catNum = 0; break;
+            case "업무":
+                catNum = 1; break;
+            case "공부":
+                catNum = 2; break;
+            case "약속":
+                catNum = 3; break;
+        }
+        values.put("category", catNum);
+        values.put("cycle", mode);
+        switch (mode) {
+            case 0:
+                break;
+            case 1:
+                values.put("day", selectedDay);
+                break;
+            case 2:
+                values.put("date", selectedDate);
+                break;
         }
     }
 }

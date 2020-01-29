@@ -468,6 +468,12 @@
         android:layout_width="match_parent"
         android:layout_marginTop="5dp"
         android:layout_height="60dp">
+        <Spinner
+            android:layout_width="100dp"
+            android:id="@+id/everycategory"
+            android:spinnerMode="dialog"
+            android:prompt="@string/category"
+            android:layout_height="45dp"/>
         <EditText
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
@@ -477,7 +483,7 @@
             android:layout_marginLeft="5dp"
             android:layout_width="match_parent"
             android:background="@drawable/search_window"
-            android:hint="  주기적으로 해야 하는 일을 추가해보세요"
+            android:hint="주기적으로 해야 하는 일을 추가해보세요"
             android:layout_height="50dp" />
         <Button
             android:layout_marginTop="5dp"
