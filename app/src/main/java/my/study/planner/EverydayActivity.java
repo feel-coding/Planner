@@ -4,12 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -146,9 +152,62 @@ public class EverydayActivity extends AppCompatActivity {
 
             }
         });
-        Log.d("evevev", "4");
+        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        lv.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            int n = 0;
+            ArrayList<EveryPlanner> selected = new ArrayList<>();
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+                if (checked) {
+//                    adapter.setNewSelection(position, checked);
+                    selected.add(al.get(position));
+                    n++;
+                } else { //사용자가 선택했던 아이템을 다시 한 번 더 눌러서 취소할 경우
+                    //adapter.removeSelection(position);
+                    selected.remove(al.get(position));
+                    n--;
+                }
+                mode.setTitle(n + "개 선택됨");
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.contextual, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.delete_todo:
+                        db = helper.getWritableDatabase();
+                        for (EveryPlanner p : selected) {
+                            db.delete("every", "_id=" + p.id, null);
+                            al.remove(p);
+                            adapter.notifyDataSetChanged();
+                        }
+                        n = 0;
+                        adapter.notifyDataSetChanged();
+                        mode.finish();
+                        break;
+                }
+                return true;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                //adapter.clearSelection();
+                n = 0;
+                selected = new ArrayList<>();
+            }
+        });
         getEveryTodoList();
-        Log.d("evevev", "getTodo함수 5");
     }
     public void every(View v){
         switch (v.getId()) {
