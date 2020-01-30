@@ -48,6 +48,62 @@ public class EveryAdapter extends BaseAdapter {
         TextView cycleFlag = view.findViewById(R.id.cycleFlag);
         TextView categoryFlag = view.findViewById(R.id.catFlag);
         TextView everyTodo = view.findViewById(R.id.every_todo);
-        return null;
+        everyTodo.setText(al.get(position).todo);
+        switch (al.get(position).category) {
+            case 0:
+                categoryFlag.setText("할 일");
+                categoryFlag.setBackground(view.getResources().getDrawable(R.drawable.red_round_tag));
+                break;
+            case 1:
+                categoryFlag.setText("업무");
+                categoryFlag.setBackground(view.getResources().getDrawable(R.drawable.green_round_tag));
+                break;
+            case 2:
+                categoryFlag.setText("공부");
+                categoryFlag.setBackground(view.getResources().getDrawable(R.drawable.blue_round_tag));
+                break;
+            case 3:
+                categoryFlag.setText("약속");
+                categoryFlag.setBackground(view.getResources().getDrawable(R.drawable.purple_round_tag));
+                break;
+        }
+        switch (al.get(position).cycle) {
+            case 0: //매일
+                cycleFlag.setText("매일");
+                break;
+            case 1: //매주
+                String day;
+                switch (al.get(position).day) {
+                    case 0:
+                        day = "월요일";
+                        break;
+                    case 1:
+                        day = "화요일";
+                        break;
+                    case 2:
+                        day = "수요일";
+                        break;
+                    case 3:
+                        day = "목요일";
+                        break;
+                    case 4:
+                        day = "금요일";
+                        break;
+                    case 5:
+                        day = "토요일";
+                        break;
+                    default:
+                        day = "일요일";
+                        break;
+                }
+                String str = "매주 " + day;
+                cycleFlag.setText(str);
+                break;
+            case 2: //매월
+                String ss = "매달 " + al.get(position).date;
+                cycleFlag.setText(ss);
+                break;
+        }
+        return view;
     }
 }

@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +19,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class EverydayActivity extends AppCompatActivity {
@@ -123,9 +127,14 @@ public class EverydayActivity extends AppCompatActivity {
         lv = findViewById(R.id.everylist);
         helper = new EveryHelper(this);
         adapter = new EveryAdapter(this, al, R.layout.every_row);
+        lv.setAdapter(adapter);
+        Log.d("evevev", "1");
         category = new String[]{"할 일", "업무", "공부", "약속"};
+        Log.d("evevev", "2");
         categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, category);
         spinner = findViewById(R.id.everycategory);
+        spinner.setAdapter(categoryAdapter);
+        Log.d("evevev", "3");
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -137,6 +146,9 @@ public class EverydayActivity extends AppCompatActivity {
 
             }
         });
+        Log.d("evevev", "4");
+        getEveryTodoList();
+        Log.d("evevev", "getTodo함수 5");
     }
     public void every(View v){
         switch (v.getId()) {
@@ -1207,7 +1219,7 @@ public class EverydayActivity extends AppCompatActivity {
         }
         db = helper.getWritableDatabase();
         ContentValues values;
-        String n = edit.getText().toString(); //getText는 String 타입이 아니라 CharSequence 타입을 반환한다. 따라서 String으로 바꿔줌
+        String n = edit.getText().toString(); //getText는 String 타입이 아니라 CharSequence 타입을 반환한다. 따라서 String으로 바꿔줘야 한다.
         values = new ContentValues();
         values.put("todo", n);
         switch (cat) {
@@ -1232,5 +1244,22 @@ public class EverydayActivity extends AppCompatActivity {
                 values.put("date", selectedDate);
                 break;
         }
+        long id = db.insert("every", null, values);
+        EveryPlanner planner = new EveryPlanner(id, n, mode, selectedDate, selectedDay, catNum);
+        al.add(planner);
+    }
+    void getEveryTodoList() {
+        Log.d("evevev", "getTodo함수");
+        db = helper.getReadableDatabase();
+        Log.d("evevev", "getTodo함수 1");
+        Cursor c = db.query("every", new String[]{"_id", "todo", "cycle", "date", "day", "category"}, null, null, null, null, null);
+        Log.d("evevev", "getTodo함수 2");
+        while (c.moveToNext()) {
+            al.add(new EveryPlanner(c.getLong(0), c.getString(1), c.getInt(2), c.getInt(3), c.getInt(4), c.getInt(5)));
+        }
+        Log.d("evevev", "getTodo함수 3");
+        c.close();
+        helper.close();
+        Log.d("evevev", "getTodo함수 4");
     }
 }
