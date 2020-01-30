@@ -5,10 +5,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class EveryAdapter extends BaseAdapter {
 
@@ -17,6 +19,7 @@ public class EveryAdapter extends BaseAdapter {
     int layout;
     DBHelper helper;
     SQLiteDatabase db;
+    HashMap<Integer, Boolean> selected = new HashMap<>();
 
     public EveryAdapter(Activity context, ArrayList<EveryPlanner> al, int layout) {
         this.context = context;
@@ -25,7 +28,18 @@ public class EveryAdapter extends BaseAdapter {
         helper = new DBHelper(context);
         db = helper.getWritableDatabase();
     }
-
+    public void setNewSelection(int position, boolean value) {
+        selected.put(position, value);
+        notifyDataSetChanged();
+    }
+    public void removeSelection(int position) {
+        selected.remove(position);
+        notifyDataSetChanged();
+    }
+    public void clearSelection() {
+        selected = new HashMap<Integer, Boolean>();
+        notifyDataSetChanged();
+    }
     @Override
     public int getCount() {
         return al.size();
@@ -103,6 +117,12 @@ public class EveryAdapter extends BaseAdapter {
                 String ss = "매달 " + al.get(position).date;
                 cycleFlag.setText(ss);
                 break;
+        }
+        Button unchecked = view.findViewById(R.id.unchecked);
+        Button checked = view.findViewById(R.id.checked);
+        if(selected.get(position) != null){
+            unchecked.setVisibility(View.INVISIBLE);
+            checked.setVisibility(View.VISIBLE);
         }
         return view;
     }

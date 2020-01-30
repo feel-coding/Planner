@@ -1,6 +1,8 @@
 package my.study.planner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -84,6 +86,7 @@ public class EverydayActivity extends AppCompatActivity {
     String[] category;
     SQLiteDatabase db;
     EveryHelper helper;
+    int selecting = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,11 +162,11 @@ public class EverydayActivity extends AppCompatActivity {
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
                 if (checked) {
-//                    adapter.setNewSelection(position, checked);
+                    adapter.setNewSelection(position, checked);
                     selected.add(al.get(position));
                     n++;
                 } else { //사용자가 선택했던 아이템을 다시 한 번 더 눌러서 취소할 경우
-                    //adapter.removeSelection(position);
+                    adapter.removeSelection(position);
                     selected.remove(al.get(position));
                     n--;
                 }
@@ -173,7 +176,7 @@ public class EverydayActivity extends AppCompatActivity {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 MenuInflater inflater = getMenuInflater();
-                inflater.inflate(R.menu.contextual, menu);
+                inflater.inflate(R.menu.delete, menu);
                 return true;
             }
 
@@ -195,6 +198,8 @@ public class EverydayActivity extends AppCompatActivity {
                         n = 0;
                         adapter.notifyDataSetChanged();
                         mode.finish();
+                        findViewById(R.id.unchecked).setVisibility(View.INVISIBLE);
+                        findViewById(R.id.checked).setVisibility(View.INVISIBLE);
                         break;
                 }
                 return true;
@@ -202,14 +207,28 @@ public class EverydayActivity extends AppCompatActivity {
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                //adapter.clearSelection();
+                adapter.clearSelection();
                 n = 0;
                 selected = new ArrayList<>();
+                findViewById(R.id.unchecked).setVisibility(View.INVISIBLE);
+                findViewById(R.id.checked).setVisibility(View.INVISIBLE);
             }
         });
         getEveryTodoList();
     }
+    @Override
+    public void onBackPressed() {
+        if (selecting == 1) {
+            selecting = 0;
+            days.setVisibility(View.GONE);
+            ll.setVisibility(View.GONE);
+        }
+        else {
+            finish();
+        }
+    }
     public void every(View v){
+        selecting = 1;
         switch (v.getId()) {
             case R.id.everyday:
                 ll.setVisibility(View.GONE);
@@ -1306,6 +1325,9 @@ public class EverydayActivity extends AppCompatActivity {
         long id = db.insert("every", null, values);
         EveryPlanner planner = new EveryPlanner(id, n, mode, selectedDate, selectedDay, catNum);
         al.add(planner);
+        adapter.notifyDataSetChanged();
+        edit.setText("");
+        selecting = 0;
     }
     void getEveryTodoList() {
         Log.d("evevev", "getTodo함수");
@@ -1316,9 +1338,7 @@ public class EverydayActivity extends AppCompatActivity {
         while (c.moveToNext()) {
             al.add(new EveryPlanner(c.getLong(0), c.getString(1), c.getInt(2), c.getInt(3), c.getInt(4), c.getInt(5)));
         }
-        Log.d("evevev", "getTodo함수 3");
         c.close();
         helper.close();
-        Log.d("evevev", "getTodo함수 4");
     }
 }
