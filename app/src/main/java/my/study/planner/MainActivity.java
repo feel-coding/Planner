@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     int catNum;
     String[] category;
     InputMethodManager imm;
+    EveryHelper everyHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         spinner.setAdapter(categoryAdapter);
         editText = findViewById(R.id.edit);
         helper = new DBHelper(this);
+        everyHelper = new EveryHelper(this);
         adapter = new MyAdapter(this, al, R.layout.row);
         lv.setAdapter(adapter);
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -340,12 +342,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     void getTodoList() {
-        db = helper.getReadableDatabase();
-        Log.d("datedate", db.toString());
-        Cursor c = db.query("planners", new String[]{"_id", "todo", "date", "done", "category"}, null, null, null, null, null);
+        db = everyHelper.getReadableDatabase();
+        Cursor c = db.query("every", new String[]{"_id", "todo", "cycle", "date", "day", "category"}, null, null, null, null, null);
         LocalDate date = LocalDate.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String today = date.format(dateTimeFormatter);
+        while(c.moveToNext()) {
+            if(c.getInt(2) == 0)
+                al.add(new Planner(c.getLong(0), c.getString(1), today, 0, c.getInt(5)));
+        }
+        db.close();
+        c.close();
+        helper.close();
+        db = helper.getReadableDatabase();
+        Log.d("datedate", db.toString());
+        c = db.query("planners", new String[]{"_id", "todo", "date", "done", "category"}, null, null, null, null, null);
         while (c.moveToNext()) {
             if (c.getString(2).equals(today))
                 al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4)));
