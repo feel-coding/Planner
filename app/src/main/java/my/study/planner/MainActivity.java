@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String[] category;
     InputMethodManager imm;
     EveryHelper everyHelper;
+    SQLiteDatabase everyDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -343,8 +344,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     void getTodoList() {
         ArrayList<Long> haveToUpdate = new ArrayList<>();
-        db = everyHelper.getReadableDatabase();
-        Cursor c = db.query("every", new String[]{"_id", "todo", "cycle", "date", "day", "category", "dbin"}, null, null, null, null, null);
+        db = helper.getWritableDatabase();
+        everyDb = everyHelper.getReadableDatabase();
+        Cursor c = everyDb.query("every", new String[]{"_id", "todo", "cycle", "date", "day", "category", "dbin"}, null, null, null, null, null);
         LocalDate date = LocalDate.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String today = date.format(dateTimeFormatter);
@@ -376,6 +378,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }
+        everyDb.close();
         db.close();
         c.close();
         db = everyHelper.getWritableDatabase();
