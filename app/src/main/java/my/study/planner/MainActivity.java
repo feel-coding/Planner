@@ -359,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     values.put("done", 0);
                     values.put("category", c.getInt(5));
                     long id = db.insert("planners", null, values);
-                    al.add(new Planner(c.getLong(0), c.getString(1), today, 0, c.getInt(5)));
+                    //al.add(new Planner(c.getLong(0), c.getString(1), today, 0, c.getInt(5)));
                     haveToUpdate.add(id);
                 }
             }
@@ -372,7 +372,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         values.put("done", 0);
                         values.put("category", c.getInt(5));
                         long id = db.insert("planners", null, values);
-                        al.add(new Planner(c.getLong(0), c.getString(1), today, 0, c.getInt(5)));
+                        //al.add(new Planner(c.getLong(0), c.getString(1), today, 0, c.getInt(5)));
                         haveToUpdate.add(id);
                     }
                 }
