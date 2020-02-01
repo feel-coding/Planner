@@ -18,6 +18,7 @@ import android.view.ActionMode;
 import android.view.MenuInflater;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
@@ -265,6 +266,67 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             return true;
         }
+        else if(id == R.id.action_sync) {
+            ArrayList<Long> haveToUpdate = new ArrayList<>();
+            al = new ArrayList<>();
+            db = helper.getWritableDatabase();
+            everyDb = everyHelper.getReadableDatabase();
+            Cursor c = everyDb.query("every", new String[]{"_id", "todo", "cycle", "date", "day", "category", "dbin"}, null, null, null, null, null);
+            LocalDate date = LocalDate.now();
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String today = date.format(dateTimeFormatter);
+            while(c.moveToNext()) {
+                if(c.getInt(2) == 0) {
+                    if(c.getInt(6) == 0) {
+                        ContentValues values = new ContentValues();
+                        values.put("todo", c.getString(1));
+                        values.put("date", today);
+                        values.put("done", 0);
+                        values.put("category", c.getInt(5));
+                        long idid = db.insert("planners", null, values);
+                        haveToUpdate.add(idid);
+                    }
+                }
+                else if(c.getInt(2) == 2) {
+                    if(c.getInt(3) == Integer.parseInt(today.substring(8, 10))) {
+                        if(c.getInt(6) == 0) {
+                            ContentValues values = new ContentValues();
+                            values.put("todo", c.getString(1));
+                            values.put("date", today);
+                            values.put("done", 0);
+                            values.put("category", c.getInt(5));
+                            long idid = db.insert("planners", null, values);
+                            haveToUpdate.add(idid);
+                        }
+                    }
+                }
+            }
+            everyDb.close();
+            db.close();
+            c.close();
+            db = everyHelper.getWritableDatabase();
+            for(long idid: haveToUpdate) {
+                ContentValues values = new ContentValues();
+                values.put("dbin", 1); //db에 썼다고 업데이트
+                db.update("every", values, "_id=" + idid, null);
+            }
+            db.close();
+            c.close();
+            everyHelper.close();
+            db = helper.getReadableDatabase();
+            Log.d("datedate", db.toString());
+            c = db.query("planners", new String[]{"_id", "todo", "date", "done", "category"}, null, null, null, null, null);
+            while (c.moveToNext()) {
+                if (c.getString(2).equals(today))
+                    al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4)));
+            }
+            c.close();
+            helper.close();
+            db.close();
+            adapter = new MyAdapter(MainActivity.this, al, R.layout.row);
+            lv.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -359,7 +421,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     values.put("done", 0);
                     values.put("category", c.getInt(5));
                     long id = db.insert("planners", null, values);
-                    //al.add(new Planner(c.getLong(0), c.getString(1), today, 0, c.getInt(5)));
                     haveToUpdate.add(id);
                 }
             }
@@ -372,7 +433,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         values.put("done", 0);
                         values.put("category", c.getInt(5));
                         long id = db.insert("planners", null, values);
-                        //al.add(new Planner(c.getLong(0), c.getString(1), today, 0, c.getInt(5)));
                         haveToUpdate.add(id);
                     }
                 }

@@ -1329,13 +1329,11 @@ public class EverydayActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         edit.setText("");
         selecting = 0;
+        db.close();
     }
     void getEveryTodoList() {
-        Log.d("evevev", "getTodo함수");
         db = helper.getReadableDatabase();
-        Log.d("evevev", "getTodo함수 1");
         Cursor c = db.query("every", new String[]{"_id", "todo", "cycle", "date", "day", "category"}, null, null, null, null, null);
-        Log.d("evevev", "getTodo함수 2");
         while (c.moveToNext()) {
             al.add(new EveryPlanner(c.getLong(0), c.getString(1), c.getInt(2), c.getInt(3), c.getInt(4), c.getInt(5)));
         }
