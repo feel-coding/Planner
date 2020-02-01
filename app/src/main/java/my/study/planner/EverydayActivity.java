@@ -1322,6 +1322,7 @@ public class EverydayActivity extends AppCompatActivity {
                 values.put("date", selectedDate);
                 break;
         }
+        values.put("dbin", 0);
         long id = db.insert("every", null, values);
         EveryPlanner planner = new EveryPlanner(id, n, mode, selectedDate, selectedDay, catNum);
         al.add(planner);

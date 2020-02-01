@@ -342,18 +342,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     void getTodoList() {
+        ArrayList<Long> haveToUpdate = new ArrayList<>();
         db = everyHelper.getReadableDatabase();
-        Cursor c = db.query("every", new String[]{"_id", "todo", "cycle", "date", "day", "category"}, null, null, null, null, null);
+        Cursor c = db.query("every", new String[]{"_id", "todo", "cycle", "date", "day", "category", "dbin"}, null, null, null, null, null);
         LocalDate date = LocalDate.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String today = date.format(dateTimeFormatter);
         while(c.moveToNext()) {
-            if(c.getInt(2) == 0)
-                al.add(new Planner(c.getLong(0), c.getString(1), today, 0, c.getInt(5)));
+            if(c.getInt(2) == 0) {
+                if(c.getInt(6) == 0) {
+                    ContentValues values = new ContentValues();
+                    values.put("todo", c.getString(1));
+                    values.put("date", today);
+                    values.put("done", 0);
+                    values.put("category", c.getInt(5));
+                    long id = db.insert("planners", null, values);
+                    al.add(new Planner(c.getLong(0), c.getString(1), today, 0, c.getInt(5)));
+                    haveToUpdate.add(id);
+                }
+            }
+            else if(c.getInt(2) == 2) {
+                if(c.getInt(3) == Integer.parseInt(today.substring(8, 10))) {
+                    if(c.getInt(6) == 0) {
+                        ContentValues values = new ContentValues();
+                        values.put("todo", c.getString(1));
+                        values.put("date", today);
+                        values.put("done", 0);
+                        values.put("category", c.getInt(5));
+                        long id = db.insert("planners", null, values);
+                        al.add(new Planner(c.getLong(0), c.getString(1), today, 0, c.getInt(5)));
+                        haveToUpdate.add(id);
+                    }
+                }
+            }
         }
         db.close();
         c.close();
-        helper.close();
+        db = everyHelper.getWritableDatabase();
+        for(long id: haveToUpdate) {
+            ContentValues values = new ContentValues();
+            values.put("dbin", 1); //db에 썼다고 업데이트
+            db.update("every", values, "_id=" + id, null);
+        }
+        db.close();
+        c.close();
+        everyHelper.close();
         db = helper.getReadableDatabase();
         Log.d("datedate", db.toString());
         c = db.query("planners", new String[]{"_id", "todo", "date", "done", "category"}, null, null, null, null, null);
@@ -363,5 +396,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         c.close();
         helper.close();
+        db.close();
     }
 }
