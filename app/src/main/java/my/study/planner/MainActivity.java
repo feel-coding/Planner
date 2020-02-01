@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if(id == R.id.action_sync) {
             ArrayList<Long> haveToUpdate = new ArrayList<>();
-            al = new ArrayList<>();
+            al.clear();
             db = helper.getWritableDatabase();
             everyDb = everyHelper.getReadableDatabase();
             Cursor c = everyDb.query("every", new String[]{"_id", "todo", "cycle", "date", "day", "category", "dbin"}, null, null, null, null, null);
@@ -283,6 +283,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         values.put("date", today);
                         values.put("done", 0);
                         values.put("category", c.getInt(5));
+                        values.put("everyid", c.getLong(0));
                         long idid = db.insert("planners", null, values);
                         haveToUpdate.add(idid);
                     }
@@ -315,10 +316,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             everyHelper.close();
             db = helper.getReadableDatabase();
             Log.d("datedate", db.toString());
-            c = db.query("planners", new String[]{"_id", "todo", "date", "done", "category"}, null, null, null, null, null);
+            c = db.query("planners", new String[]{"_id", "todo", "date", "done", "category", "everyid"}, null, null, null, null, null);
             while (c.moveToNext()) {
                 if (c.getString(2).equals(today))
-                    al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4)));
+                    al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4), c.getLong(5)));
             }
             c.close();
             helper.close();
@@ -385,8 +386,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String d = date.format(dateTimeFormatter);
             values.put("date", d);
             values.put("category", catNum);
+            values.put("everyid", -1);
             long id = db.insert("planners", null, values);
-            Planner planner = new Planner(id, n, d, 0, catNum);
+            Planner planner = new Planner(id, n, d, 0, catNum, -1);
             al.add(planner);
         }
         else {
@@ -420,6 +422,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     values.put("date", today);
                     values.put("done", 0);
                     values.put("category", c.getInt(5));
+                    values.put("everyid", c.getLong(0));
                     long id = db.insert("planners", null, values);
                     haveToUpdate.add(id);
                 }
@@ -432,6 +435,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         values.put("date", today);
                         values.put("done", 0);
                         values.put("category", c.getInt(5));
+                        values.put("everyid", c.getLong(0));
                         long id = db.insert("planners", null, values);
                         haveToUpdate.add(id);
                     }
@@ -452,10 +456,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         everyHelper.close();
         db = helper.getReadableDatabase();
         Log.d("datedate", db.toString());
-        c = db.query("planners", new String[]{"_id", "todo", "date", "done", "category"}, null, null, null, null, null);
+        c = db.query("planners", new String[]{"_id", "todo", "date", "done", "category", "everyid"}, null, null, null, null, null);
         while (c.moveToNext()) {
+            Log.d("ididid", c.getString(1) + " " + c.getLong(5));
             if (c.getString(2).equals(today))
-                al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4)));
+                al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4), c.getLong(5)));
         }
         c.close();
         helper.close();

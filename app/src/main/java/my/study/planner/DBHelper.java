@@ -13,7 +13,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table planners(_id integer primary key autoincrement, todo text not null, date date not null, done integer not null, category integer not null);");
+        db.execSQL("create table planners(_id integer primary key autoincrement, todo text not null, date date not null, done integer not null, category integer not null, everyid integer);");
     }
 
     @Override

@@ -79,7 +79,7 @@ public class CalendarActivity extends AppCompatActivity {
 //                startActivity(i);
                 Cursor c = db.rawQuery("select * from planners", null);
                 while (c.moveToNext()) {
-                    Planner planner = new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4));
+                    Planner planner = new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4), c.getLong(5));
                     if (selectedDay.equals(c.getString(2)))
                         al.add(planner);
                 }

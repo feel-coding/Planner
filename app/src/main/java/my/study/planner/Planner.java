@@ -10,13 +10,15 @@ public class Planner {
     String date;
     int done;
     int category;
+    long everyid;
 
-    public Planner(long id, String todo, String date, int done, int category) {
+    public Planner(long id, String todo, String date, int done, int category, long everyid) {
         this.id = id;
         this.todo = todo;
         this.date = date;
         this.done = done;
         this.category = category;
+        this.everyid = everyid;
     }
 
     @NonNull
