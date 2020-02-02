@@ -24,6 +24,6 @@ public class Planner {
     @NonNull
     @Override
     public String toString() {
-        return id + ", " + todo + ", " + date + ", " + done + ", " + category;
+        return "id: " + id + ", 할일: " + todo + ", 날짜: " + date + ", 다 했는지: " + done + ", 카테고리: " + category + ", every DB의 id" + everyid;
     }
 }

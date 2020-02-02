@@ -284,8 +284,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         values.put("done", 0);
                         values.put("category", c.getInt(5));
                         values.put("everyid", c.getLong(0));
-                        long idid = db.insert("planners", null, values);
-                        haveToUpdate.add(idid);
+                        long idid = db.insert("planners", null, values); //planner db에 저장된 id
+                        haveToUpdate.add(c.getLong(0));
+                        Log.d("dbdbdb", "동기화 버튼 누름 id: " +c.getLong(0) + " todo: " + c.getInt(1) + " cycle: " + c.getInt(2) + " date: " + c.getInt(3) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));
                     }
                 }
                 else if(c.getInt(2) == 2) {
@@ -297,11 +298,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             values.put("done", 0);
                             values.put("category", c.getInt(5));
                             long idid = db.insert("planners", null, values);
-                            haveToUpdate.add(idid);
+                            haveToUpdate.add(c.getLong(0));
+                            Log.d("dbdbdb", "동기화 버튼 누름 id: " +c.getLong(0) + " todo: " + c.getString(1) + " cycle: " + c.getInt(2) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));
                         }
                     }
                 }
             }
+            System.out.println(al);
             everyDb.close();
             db.close();
             c.close();
@@ -415,7 +418,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String today = date.format(dateTimeFormatter);
         while(c.moveToNext()) {
-            if(c.getInt(2) == 0) {
+            if(c.getInt(2) == 0) { //반복 주기가 매일이라면
                 if(c.getInt(6) == 0) {
                     ContentValues values = new ContentValues();
                     values.put("todo", c.getString(1));
@@ -424,10 +427,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     values.put("category", c.getInt(5));
                     values.put("everyid", c.getLong(0));
                     long id = db.insert("planners", null, values);
-                    haveToUpdate.add(id);
+                    haveToUpdate.add(c.getLong(0));
+                    Log.d("dbdbdb", "getTodoList 메소드 안 id: " +c.getLong(0) + " todo: " + c.getInt(1) + " cycle: " + c.getInt(2) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));
                 }
             }
-            else if(c.getInt(2) == 2) {
+            else if(c.getInt(2) == 2) { //반복주기가 매달이라면
                 if(c.getInt(3) == Integer.parseInt(today.substring(8, 10))) {
                     if(c.getInt(6) == 0) {
                         ContentValues values = new ContentValues();
@@ -437,11 +441,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         values.put("category", c.getInt(5));
                         values.put("everyid", c.getLong(0));
                         long id = db.insert("planners", null, values);
-                        haveToUpdate.add(id);
+                        haveToUpdate.add(c.getLong(0));
+                        Log.d("dbdbdb", "getTodoList 메소드 안 id: " +c.getLong(0) + " todo: " + c.getInt(1) + " cycle: " + c.getInt(2) + " date: " + c.getInt(3) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));
                     }
                 }
             }
         }
+        System.out.println(al);
         everyDb.close();
         db.close();
         c.close();
@@ -455,10 +461,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         c.close();
         everyHelper.close();
         db = helper.getReadableDatabase();
-        Log.d("datedate", db.toString());
         c = db.query("planners", new String[]{"_id", "todo", "date", "done", "category", "everyid"}, null, null, null, null, null);
         while (c.moveToNext()) {
-            Log.d("ididid", c.getString(1) + " " + c.getLong(5));
+            Log.d("dbdbdb", "getTodoList 메소드 안 planner db에서 읽어오기 id: " +c.getLong(0) + " todo: " + c.getString(1) + " date: " + c.getString(2) + " done: " + c.getInt(3) + " category: " + c.getInt(4) + " everyid: " + c.getLong(5));
             if (c.getString(2).equals(today))
                 al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4), c.getLong(5)));
         }

@@ -19,4 +19,10 @@ public class EveryPlanner {
         this.day = day;
         this.category = category;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "id=" + id + ", 할일=" + todo + ", 주기=" + cycle + ", 매월 " + date +"일, " + "매주 " + day + "요일, " + "카테고리: "+ category;
+    }
 }
