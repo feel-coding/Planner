@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         lv.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             int n = 0;
             ArrayList<Planner> selected = new ArrayList<>();
+
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
                 if (checked) {
@@ -212,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
@@ -234,8 +235,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             add.setBackgroundResource(R.drawable.add);
             editText.setHint("할 일을 추가해보세요");
             editText.setText("");
-        }
-        else {
+        } else {
             if (System.currentTimeMillis() - pressedTime < 20000) {
                 finishAffinity();
                 return;
@@ -261,12 +261,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if(id == R.id.action_search) {
+        if (id == R.id.action_search) {
             Intent intent = new Intent(MainActivity.this, SearchActivity.class);
             startActivity(intent);
             return true;
-        }
-        else if(id == R.id.action_sync) {
+        } else if (id == R.id.action_sync) {
             ArrayList<Long> haveToUpdate = new ArrayList<>();
             al.clear();
             db = helper.getWritableDatabase();
@@ -275,10 +274,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             LocalDate date = LocalDate.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String today = date.format(dateTimeFormatter);
-            while(c.moveToNext()) {
-                if(c.getInt(2) == 0) {
-                    Log.d("please", "sync 메소드 안, if문 밖 id: " +c.getLong(0) + " todo: " + c.getInt(1) + " cycle: " + c.getInt(2) + " date: " + c.getInt(3) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));
-                    if(c.getInt(6) == 0) {
+            while (c.moveToNext()) {
+                if (c.getInt(2) == 0) {
+                    if (c.getInt(6) == 0) {
                         ContentValues values = new ContentValues();
                         values.put("todo", c.getString(1));
                         values.put("date", today);
@@ -287,21 +285,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         values.put("everyid", c.getLong(0));
                         long idid = db.insert("planners", null, values); //planner db에 저장된 id
                         haveToUpdate.add(c.getLong(0));
-                        Log.d("please", "sync 메소드 안, dbin이 0이라면 if문 안 id: " +c.getLong(0) + " todo: " + c.getString(1) + " cycle: " + c.getInt(2) + " date: " + c.getInt(3) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));
                     }
-                }
-                else if(c.getInt(2) == 2) {
-                    Log.d("please", "sync 메소드 안, if문 밖 id: " +c.getLong(0) + " todo: " + c.getString(1) + " cycle: " + c.getInt(2) + " date: " + c.getInt(3) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));
-                    if(c.getInt(3) == Integer.parseInt(today.substring(8, 10))) {
-                        if(c.getInt(6) == 0) {
+                } else if (c.getInt(2) == 2) {
+                    if (c.getInt(3) == Integer.parseInt(today.substring(8, 10))) {
+                        if (c.getInt(6) == 0) {
                             ContentValues values = new ContentValues();
                             values.put("todo", c.getString(1));
                             values.put("date", today);
                             values.put("done", 0);
                             values.put("category", c.getInt(5));
-                            long idid = db.insert("planners", null, values);
                             haveToUpdate.add(c.getLong(0));
-                            Log.d("please", "sync 메소드 안, dbin이 0이라면 if문 안 id: " +c.getLong(0) + " todo: " + c.getString(1) + " cycle: " + c.getInt(2) + " date: " + c.getInt(3) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));         }
+                        }
                     }
                 }
             }
@@ -310,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             db.close();
             c.close();
             db = everyHelper.getWritableDatabase();
-            for(long idid: haveToUpdate) {
+            for (long idid : haveToUpdate) {
                 ContentValues values = new ContentValues();
                 values.put("dbin", 1); //db에 썼다고 업데이트
                 db.update("every", values, "_id=" + idid, null);
@@ -363,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void onClick(View view) {
-        if(editText.getText().toString().equals("")) {
+        if (editText.getText().toString().equals("")) {
             Toast.makeText(MainActivity.this, "할 일을 입력해주세요", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -374,13 +368,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         values.put("todo", n);
         switch (cat) {
             case "할 일":
-                catNum = 0; break;
+                catNum = 0;
+                break;
             case "업무":
-                catNum = 1; break;
+                catNum = 1;
+                break;
             case "공부":
-                catNum = 2; break;
+                catNum = 2;
+                break;
             case "약속":
-                catNum = 3; break;
+                catNum = 3;
+                break;
         }
         values.put("category", catNum);
         if (mode == 0) {
@@ -394,8 +392,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             long id = db.insert("planners", null, values);
             Planner planner = new Planner(id, n, d, 0, catNum, -1);
             al.add(planner);
-        }
-        else {
+        } else {
             values.put("done", al.get(selectedIndex).done);
             values.put("date", al.get(selectedIndex).date);
             db.update("planners", values, "_id=" + al.get(selectedIndex).id, null);
@@ -418,10 +415,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LocalDate date = LocalDate.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String today = date.format(dateTimeFormatter);
-        while(c.moveToNext()) {
-            Log.d("please", "getTodoList 메소드 안, if문 밖 id: " +c.getLong(0) + " todo: " + c.getString(1) + " cycle: " + c.getInt(2) + " date: " + c.getInt(3) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));
-            if(c.getInt(2) == 0) { //반복 주기가 매일이라면
-                if(c.getInt(6) == 0) {
+        while (c.moveToNext()) {
+            Log.d("please", "getTodoList 메소드 안, if문 밖 id: " + c.getLong(0) + " todo: " + c.getString(1) + " cycle: " + c.getInt(2) + " date: " + c.getInt(3) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));
+            if (c.getInt(2) == 0) { //반복 주기가 매일이라면
+                if (c.getInt(6) == 0) {
                     ContentValues values = new ContentValues();
                     values.put("todo", c.getString(1));
                     values.put("date", today);
@@ -429,13 +426,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     values.put("category", c.getInt(5));
                     values.put("everyid", c.getLong(0));
                     haveToUpdate.add(c.getLong(0));
-                    Log.d("please", "getTodoList 메소드 안, dbin이 0이라면 if문 안 id: " +c.getLong(0) + " todo: " + c.getString(1) + " cycle: " + c.getInt(2) + " date: " + c.getInt(3) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));      }
-            }
-            else if(c.getInt(2) == 2) { //반복주기가 매달이라면
-                Log.d("please", "getTodoList 메소드 안, if문 밖 id: " +c.getLong(0) + " todo: " + c.getString(1) + " cycle: " + c.getInt(2) + " date: " + c.getInt(3) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));
-
-                if(c.getInt(3) == Integer.parseInt(today.substring(8, 10))) {
-                    if(c.getInt(6) == 0) {
+                }
+            } else if (c.getInt(2) == 2) { //반복주기가 매달이라면
+                if (c.getInt(3) == Integer.parseInt(today.substring(8, 10))) {
+                    if (c.getInt(6) == 0) {
                         ContentValues values = new ContentValues();
                         values.put("todo", c.getString(1));
                         values.put("date", today);
@@ -443,7 +437,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         values.put("category", c.getInt(5));
                         values.put("everyid", c.getLong(0));
                         haveToUpdate.add(c.getLong(0));
-                        Log.d("please", "getTodoList 메소드 안, dbin이 0이라면 if문 안 id: " +c.getLong(0) + " todo: " + c.getString(1) + " cycle: " + c.getInt(2) + " date: " + c.getInt(3) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));
+                        Log.d("please", "getTodoList 메소드 안, dbin이 0이라면 if문 안 id: " + c.getLong(0) + " todo: " + c.getString(1) + " cycle: " + c.getInt(2) + " date: " + c.getInt(3) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));
                     }
                 }
             }
@@ -453,7 +447,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         db.close();
         c.close();
         db = everyHelper.getWritableDatabase();
-        for(long id: haveToUpdate) {
+        for (long id : haveToUpdate) {
             ContentValues values = new ContentValues();
             values.put("dbin", 1); //db에 썼다고 업데이트
             db.update("every", values, "_id=" + id, null);
@@ -464,7 +458,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         db = helper.getReadableDatabase();
         c = db.query("planners", new String[]{"_id", "todo", "date", "done", "category", "everyid"}, null, null, null, null, null);
         while (c.moveToNext()) {
-            Log.d("please", "getTodoList 메소드 안 planner db에서 읽어오기 id: " +c.getLong(0) + " todo: " + c.getString(1) + " date: " + c.getString(2) + " done: " + c.getInt(3) + " category: " + c.getInt(4) + " everyid: " + c.getLong(5));
+            Log.d("please", "getTodoList 메소드 안 planner db에서 읽어오기 id: " + c.getLong(0) + " todo: " + c.getString(1) + " date: " + c.getString(2) + " done: " + c.getInt(3) + " category: " + c.getInt(4) + " everyid: " + c.getLong(5));
             if (c.getString(2).equals(today))
                 al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4), c.getLong(5)));
         }
