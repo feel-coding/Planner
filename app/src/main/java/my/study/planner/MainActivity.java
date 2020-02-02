@@ -313,7 +313,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             c.close();
             everyHelper.close();
             db = helper.getReadableDatabase();
-            Log.d("datedate", db.toString());
             c = db.query("planners", new String[]{"_id", "todo", "date", "done", "category", "everyid"}, null, null, null, null, null);
             while (c.moveToNext()) {
                 if (c.getString(2).equals(today))
@@ -405,6 +404,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         editText.setText("");
         adapter.notifyDataSetChanged();
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        db.close();
     }
 
     void getTodoList() {
@@ -416,7 +416,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String today = date.format(dateTimeFormatter);
         while (c.moveToNext()) {
-            Log.d("please", "getTodoList 메소드 안, if문 밖 id: " + c.getLong(0) + " todo: " + c.getString(1) + " cycle: " + c.getInt(2) + " date: " + c.getInt(3) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));
             if (c.getInt(2) == 0) { //반복 주기가 매일이라면
                 if (c.getInt(6) == 0) {
                     ContentValues values = new ContentValues();
@@ -437,7 +436,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         values.put("category", c.getInt(5));
                         values.put("everyid", c.getLong(0));
                         haveToUpdate.add(c.getLong(0));
-                        Log.d("please", "getTodoList 메소드 안, dbin이 0이라면 if문 안 id: " + c.getLong(0) + " todo: " + c.getString(1) + " cycle: " + c.getInt(2) + " date: " + c.getInt(3) + " category: " + c.getInt(5) + " dbin: " + c.getInt(6));
                     }
                 }
             }
@@ -458,7 +456,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         db = helper.getReadableDatabase();
         c = db.query("planners", new String[]{"_id", "todo", "date", "done", "category", "everyid"}, null, null, null, null, null);
         while (c.moveToNext()) {
-            Log.d("please", "getTodoList 메소드 안 planner db에서 읽어오기 id: " + c.getLong(0) + " todo: " + c.getString(1) + " date: " + c.getString(2) + " done: " + c.getInt(3) + " category: " + c.getInt(4) + " everyid: " + c.getLong(5));
             if (c.getString(2).equals(today))
                 al.add(new Planner(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getInt(4), c.getLong(5)));
         }
