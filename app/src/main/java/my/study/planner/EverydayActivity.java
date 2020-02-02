@@ -1324,6 +1324,7 @@ public class EverydayActivity extends AppCompatActivity {
         }
         values.put("dbin", 0);
         long id = db.insert("every", null, values);
+        Log.d("please", "id: " + id + ", todo: " + n + ", cycle: " + mode + ", date: " +selectedDate + ", day: " + selectedDay + "category: " + catNum + "dbin: " + 0);
         EveryPlanner planner = new EveryPlanner(id, n, mode, selectedDate, selectedDay, catNum);
         al.add(planner);
         adapter.notifyDataSetChanged();
