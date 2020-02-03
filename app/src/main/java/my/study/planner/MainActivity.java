@@ -48,9 +48,13 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -283,10 +287,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         values.put("done", 0);
                         values.put("category", c.getInt(5));
                         values.put("everyid", c.getLong(0));
-                        long idid = db.insert("planners", null, values); //planner db에 저장된 id
                         haveToUpdate.add(c.getLong(0));
                     }
-                } else if (c.getInt(2) == 2) {
+                }
+                else if (c.getInt(2) == 1) { //반복 주기가 매주라면
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        LocalDate todayDate = dateFormat.parse(today).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        DayOfWeek yoil = todayDate.getDayOfWeek();
+                        int todayYoil;
+                        if(yoil == DayOfWeek.MONDAY) {
+                            todayYoil = 0;
+                        }
+                        else if (yoil == DayOfWeek.TUESDAY) {
+                            todayYoil = 1;
+                        }
+                        else if (yoil == DayOfWeek.WEDNESDAY) {
+                            todayYoil = 2;
+                        }
+                        else if (yoil == DayOfWeek.THURSDAY) {
+                            todayYoil = 3;
+                        }
+                        else if (yoil == DayOfWeek.FRIDAY) {
+                            todayYoil = 4;
+                        }
+                        else if (yoil == DayOfWeek.SATURDAY) {
+                            todayYoil = 5;
+                        }
+                        else {
+                            todayYoil = 6;
+                        }
+                        if(c.getInt(4) == todayYoil) {
+                            if(c.getInt(6) == 0) {
+                                ContentValues values = new ContentValues();
+                                values.put("todo", c.getString(1));
+                                values.put("date", today);
+                                values.put("done", 0);
+                                values.put("category", c.getInt(5));
+                                values.put("everyid", c.getLong(0));
+                                haveToUpdate.add(c.getLong(0));
+                            }
+                        }
+                    }catch (ParseException e) {
+
+                    }
+                }
+                else if (c.getInt(2) == 2) {
                     if (c.getInt(3) == Integer.parseInt(today.substring(8, 10))) {
                         if (c.getInt(6) == 0) {
                             ContentValues values = new ContentValues();
@@ -426,7 +472,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     values.put("everyid", c.getLong(0));
                     haveToUpdate.add(c.getLong(0));
                 }
-            } else if (c.getInt(2) == 2) { //반복주기가 매달이라면
+            }
+            else if (c.getInt(2) == 1) { //반복 주기가 매주라면
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    LocalDate todayDate = dateFormat.parse(today).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    DayOfWeek yoil = todayDate.getDayOfWeek();
+                    int todayYoil;
+                    if(yoil == DayOfWeek.MONDAY) {
+                        todayYoil = 0;
+                    }
+                    else if (yoil == DayOfWeek.TUESDAY) {
+                        todayYoil = 1;
+                    }
+                    else if (yoil == DayOfWeek.WEDNESDAY) {
+                        todayYoil = 2;
+                    }
+                    else if (yoil == DayOfWeek.THURSDAY) {
+                        todayYoil = 3;
+                    }
+                    else if (yoil == DayOfWeek.FRIDAY) {
+                        todayYoil = 4;
+                    }
+                    else if (yoil == DayOfWeek.SATURDAY) {
+                        todayYoil = 5;
+                    }
+                    else {
+                        todayYoil = 6;
+                    }
+                    if(c.getInt(4) == todayYoil) {
+                        if(c.getInt(6) == 0) {
+                            ContentValues values = new ContentValues();
+                            values.put("todo", c.getString(1));
+                            values.put("date", today);
+                            values.put("done", 0);
+                            values.put("category", c.getInt(5));
+                            values.put("everyid", c.getLong(0));
+                            haveToUpdate.add(c.getLong(0));
+                        }
+                    }
+                }catch (ParseException e) {
+
+                }
+            }
+            else if (c.getInt(2) == 2) { //반복주기가 매달이라면
                 if (c.getInt(3) == Integer.parseInt(today.substring(8, 10))) {
                     if (c.getInt(6) == 0) {
                         ContentValues values = new ContentValues();
