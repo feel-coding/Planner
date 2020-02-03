@@ -279,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String today = date.format(dateTimeFormatter);
             while (c.moveToNext()) {
+                Log.d("yoyoyo", "todo=" + c.getString(1) +"의  c.getInt(2)="+c.getInt(2));
                 if (c.getInt(2) == 0) {
                     if (c.getInt(6) == 0) {
                         ContentValues values = new ContentValues();
@@ -287,10 +288,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         values.put("done", 0);
                         values.put("category", c.getInt(5));
                         values.put("everyid", c.getLong(0));
+                        db.insert("planners", null, values);
                         haveToUpdate.add(c.getLong(0));
                     }
                 }
                 else if (c.getInt(2) == 1) { //반복 주기가 매주라면
+                    Log.d("yoyoyo", "매주 todo=" + c.getString(1) +"의  c.getInt(2)="+c.getInt(2));
                     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     try {
                         LocalDate todayDate = dateFormat.parse(today).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -317,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         else {
                             todayYoil = 6;
                         }
+                        Log.d("yoyoyo", "" + todayYoil);
                         if(c.getInt(4) == todayYoil) {
                             if(c.getInt(6) == 0) {
                                 ContentValues values = new ContentValues();
@@ -325,6 +329,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 values.put("done", 0);
                                 values.put("category", c.getInt(5));
                                 values.put("everyid", c.getLong(0));
+                                db.insert("planners", null, values);
                                 haveToUpdate.add(c.getLong(0));
                             }
                         }
@@ -340,6 +345,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             values.put("date", today);
                             values.put("done", 0);
                             values.put("category", c.getInt(5));
+                            db.insert("planners", null, values);
                             haveToUpdate.add(c.getLong(0));
                         }
                     }
@@ -470,6 +476,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     values.put("done", 0);
                     values.put("category", c.getInt(5));
                     values.put("everyid", c.getLong(0));
+                    db.insert("planners", null, values);
                     haveToUpdate.add(c.getLong(0));
                 }
             }
@@ -508,6 +515,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             values.put("done", 0);
                             values.put("category", c.getInt(5));
                             values.put("everyid", c.getLong(0));
+                            db.insert("planners", null, values);
                             haveToUpdate.add(c.getLong(0));
                         }
                     }
@@ -524,6 +532,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         values.put("done", 0);
                         values.put("category", c.getInt(5));
                         values.put("everyid", c.getLong(0));
+                        db.insert("planners", null, values);
                         haveToUpdate.add(c.getLong(0));
                     }
                 }
