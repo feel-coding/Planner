@@ -112,6 +112,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         editText = findViewById(R.id.edit);
         helper = new DBHelper(this);
         everyHelper = new EveryHelper(this);
+        db = helper.getWritableDatabase();
+        db.close();
+        db = everyHelper.getWritableDatabase();
+        db.close();
         adapter = new MyAdapter(this, al, R.layout.row);
         lv.setAdapter(adapter);
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -659,6 +663,7 @@ class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTi
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         // Do something with the time chosen by the user
         Log.d("timesetset", "" + hourOfDay + "시 " + minute);
+
     }
 
 }
