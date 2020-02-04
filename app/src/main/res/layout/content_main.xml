@@ -16,13 +16,39 @@
         android:layout_height="wrap_content">
 
         <Spinner
-            android:layout_width="100dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
             android:id="@+id/category"
             android:spinnerMode="dialog"
             android:prompt="@string/category"
             android:layout_height="45dp"/>
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/push_notification"
+            android:layout_width="0dp"
+            android:layout_margin="1dp"
+            android:textColor="@color/white"
+            android:onClick="push"
+            android:text="미완료시 푸시알림"
+            android:background="@drawable/grey_round_button"
+            android:layout_height="wrap_content" />
+        <Button
+            android:layout_margin="1dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:textColor="@color/white"
+            android:id="@+id/no_notification"
+            android:text="푸시알림 안 함"
+            android:onClick="push"
+            android:background="@drawable/grey_round_button"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <EditText
             android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
             android:id="@+id/edit"
             android:height="45dp"
             android:paddingStart="20dp"
@@ -41,6 +67,7 @@
             android:layout_width="45dp"
             android:layout_height="wrap_content" />
     </LinearLayout>
+
     <ListView
         android:layout_marginTop="10dp"
         android:id="@+id/lv"
