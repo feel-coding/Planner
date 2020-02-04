@@ -9,7 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EverydayActivity"></activity>
+        <service
+            android:name=".AlarmService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity android:name=".EverydayActivity" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />

@@ -1,10 +1,14 @@
 package my.study.planner;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -21,6 +25,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NotificationCompat;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
@@ -101,7 +106,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter = new MyAdapter(this, al, R.layout.row);
         lv.setAdapter(adapter);
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
+        String NOTIFICATION_ID = "할 일";
+        String NOTIFICATION_NAME = "오늘의 할 일 알림";
+        int IMPORTANCE = NotificationManager.IMPORTANCE_HIGH;
+
+        //채널 생성
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_ID, NOTIFICATION_NAME, IMPORTANCE);
+            notificationManager.createNotificationChannel(channel);
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this,NOTIFICATION_ID)
+                .setContentTitle("할 일") //타이틀 TEXT
+                .setContentText("아직 하지 않은 할 일이 있습니다") //세부내용 TEXT
+                .setSmallIcon (R.mipmap.ic_launcher_round) //필수 (안해주면 에러)
+                ;
+
+        notificationManager.notify(0, builder.build());
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -279,7 +301,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String today = date.format(dateTimeFormatter);
             while (c.moveToNext()) {
-                Log.d("yoyoyo", "todo=" + c.getString(1) +"의  c.getInt(2)="+c.getInt(2));
                 if (c.getInt(2) == 0) {
                     if (c.getInt(6) == 0) {
                         ContentValues values = new ContentValues();
@@ -293,7 +314,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
                 else if (c.getInt(2) == 1) { //반복 주기가 매주라면
-                    Log.d("yoyoyo", "매주 todo=" + c.getString(1) +"의  c.getInt(2)="+c.getInt(2));
                     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     try {
                         LocalDate todayDate = dateFormat.parse(today).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
