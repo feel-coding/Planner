@@ -12,6 +12,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -133,8 +134,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this,NOTIFICATION_ID)
                 .setContentTitle("할 일") //타이틀 TEXT
                 .setContentText("아직 하지 않은 할 일이 있습니다") //세부내용 TEXT
-                .setSmallIcon (R.mipmap.ic_launcher_round) //필수 (안해주면 에러)
-                ;
+                .setSmallIcon (R.mipmap.ic_launcher_round); //필수 (안해주면 에러)
 
         notificationManager.notify(0, builder.build());
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -150,6 +150,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 imm.showSoftInput(editText, 0);
             }
         });
+        PackageManager pm = this.getPackageManager();
+        ComponentName receiver = new ComponentName(this, DeviceBootingReceiver.class);
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) {
+
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, pendingIntent);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            }
+        }
+
+        // 부팅 후 실행되는 리시버 사용가능하게 설정
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -600,9 +620,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (v.getId()) {
             case R.id.push_notification:
                 findViewById(R.id.no_notification).setBackground(getDrawable(R.drawable.grey_round_button));
-                DialogFragment newFragment = new TimePickerFragment();
+                TimePickerFragment newFragment = new TimePickerFragment();
                 newFragment.show(getSupportFragmentManager(), "timePicker");
                 break;
+
             case R.id.no_notification:
                 findViewById(R.id.push_notification).setBackground(getDrawable(R.drawable.grey_round_button));
                 break;
@@ -652,6 +673,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 }
 class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+    Calendar calendar;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current time as the default values for the picker
@@ -663,7 +685,8 @@ class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTi
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         // Do something with the time chosen by the user
         Log.d("timesetset", "" + hourOfDay + "시 " + minute);
-
     }
-
+    public Calendar getCalendar(){
+        return calendar;
+    }
 }
