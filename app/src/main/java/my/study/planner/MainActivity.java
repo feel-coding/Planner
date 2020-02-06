@@ -608,6 +608,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         v.setBackground(getDrawable(R.drawable.round_pastel_yellow));
         switch (v.getId()) {
             case R.id.push_notification:
+//                Intent i = new Intent(this, TimePickActivity.class);
+//                startActivity(i);
                 findViewById(R.id.no_notification).setBackground(getDrawable(R.drawable.grey_round_button));
                 TimePickerFragment newFragment = new TimePickerFragment(this);
                 newFragment.show(getSupportFragmentManager(), "timePicker");
