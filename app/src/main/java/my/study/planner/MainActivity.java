@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -123,23 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter = new MyAdapter(this, al, R.layout.row);
         lv.setAdapter(adapter);
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        String NOTIFICATION_ID = "할 일";
-        String NOTIFICATION_NAME = "오늘의 할 일 알림";
-        int IMPORTANCE = NotificationManager.IMPORTANCE_HIGH;
-
-        //채널 생성
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(NOTIFICATION_ID, NOTIFICATION_NAME, IMPORTANCE);
-            notificationManager.createNotificationChannel(channel);
-        }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this,NOTIFICATION_ID)
-                .setContentTitle("할 일") //타이틀 TEXT
-                .setContentText("아직 하지 않은 할 일이 있습니다") //세부내용 TEXT
-                .setSmallIcon (R.mipmap.ic_launcher_round); //필수 (안해주면 에러)
-
-        notificationManager.notify(0, builder.build());
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -608,67 +593,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         v.setBackground(getDrawable(R.drawable.round_pastel_yellow));
         switch (v.getId()) {
             case R.id.push_notification:
-//                Intent i = new Intent(this, TimePickActivity.class);
-//                startActivity(i);
                 findViewById(R.id.no_notification).setBackground(getDrawable(R.drawable.grey_round_button));
                 TimePickerFragment newFragment = new TimePickerFragment(this);
                 newFragment.show(getSupportFragmentManager(), "timePicker");
-                SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
-                long millis = sharedPreferences.getLong("nextNotifyTime", Calendar.getInstance().getTimeInMillis());
-                Calendar nextNotifyTime = new GregorianCalendar();
-                nextNotifyTime.setTimeInMillis(millis);
-
-                Date nextDate = nextNotifyTime.getTime();
-                String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault()).format(nextDate);
-                Toast.makeText(getApplicationContext(),"[처음 실행시] 다음 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.no_notification:
                 findViewById(R.id.push_notification).setBackground(getDrawable(R.drawable.grey_round_button));
                 break;
         }
-    }
-    void diaryNotification(Calendar calendar)
-    {
-//        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-//        Boolean dailyNotify = sharedPref.getBoolean(SettingsActivity.KEY_PREF_DAILY_NOTIFICATION, true);
-        Boolean dailyNotify = true; // 무조건 알람을 사용
-
-        PackageManager pm = this.getPackageManager();
-        ComponentName receiver = new ComponentName(this, DeviceBootingReceiver.class);
-        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-
-        // 사용자가 매일 알람을 허용했다면
-        if (dailyNotify) {
-            if (alarmManager != null) {
-
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                        AlarmManager.INTERVAL_DAY, pendingIntent);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                }
-            }
-
-            // 부팅 후 실행되는 리시버 사용가능하게 설정
-            pm.setComponentEnabledSetting(receiver,
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                    PackageManager.DONT_KILL_APP);
-
-        }
-//        else { //Disable Daily Notifications
-//            if (PendingIntent.getBroadcast(this, 0, alarmIntent, 0) != null && alarmManager != null) {
-//                alarmManager.cancel(pendingIntent);
-//                //Toast.makeText(this,"Notifications were disabled",Toast.LENGTH_SHORT).show();
-//            }
-//            pm.setComponentEnabledSetting(receiver,
-//                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-//                    PackageManager.DONT_KILL_APP);
-//        }
     }
 }
 class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
