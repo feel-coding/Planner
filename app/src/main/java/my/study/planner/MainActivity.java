@@ -74,9 +74,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -150,11 +153,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 imm.showSoftInput(editText, 0);
             }
         });
-        PackageManager pm = this.getPackageManager();
-        ComponentName receiver = new ComponentName(this, DeviceBootingReceiver.class);
-        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//        PackageManager pm = this.getPackageManager();
+//        ComponentName receiver = new ComponentName(this, DeviceBootingReceiver.class);
+//        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -605,8 +609,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (v.getId()) {
             case R.id.push_notification:
                 findViewById(R.id.no_notification).setBackground(getDrawable(R.drawable.grey_round_button));
-                TimePickerFragment newFragment = new TimePickerFragment();
+                TimePickerFragment newFragment = new TimePickerFragment(this);
                 newFragment.show(getSupportFragmentManager(), "timePicker");
+                SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
+                long millis = sharedPreferences.getLong("nextNotifyTime", Calendar.getInstance().getTimeInMillis());
+                Calendar nextNotifyTime = new GregorianCalendar();
+                nextNotifyTime.setTimeInMillis(millis);
+
+                Date nextDate = nextNotifyTime.getTime();
+                String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault()).format(nextDate);
+                Toast.makeText(getApplicationContext(),"[처음 실행시] 다음 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.no_notification:
@@ -658,6 +670,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 }
 class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+    Context context;
+    public TimePickerFragment(Context context) {
+        this.context = context;
+    }
+
     Calendar calendar;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -670,6 +687,32 @@ class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTi
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         // Do something with the time chosen by the user
         Log.d("timesetset", "" + hourOfDay + "시 " + minute);
+        Toast.makeText(context, hourOfDay + "시 " + minute +"분으로 알림이 설정되었습니다.", Toast.LENGTH_SHORT).show();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        SharedPreferences.Editor editor = context.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
+        editor.putLong("nextNotifyTime", (long)calendar.getTimeInMillis());
+        editor.apply();
+        PackageManager pm = context.getPackageManager();
+        ComponentName receiver = new ComponentName(context, DeviceBootingReceiver.class);
+        Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) {
+
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, pendingIntent);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            }
+        }
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
     }
     public Calendar getCalendar(){
         return calendar;
