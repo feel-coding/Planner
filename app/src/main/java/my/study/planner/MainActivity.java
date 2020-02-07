@@ -138,12 +138,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 imm.showSoftInput(editText, 0);
             }
         });
-//        PackageManager pm = this.getPackageManager();
-//        ComponentName receiver = new ComponentName(this, DeviceBootingReceiver.class);
-//        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
