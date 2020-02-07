@@ -16,4 +16,5 @@
     <color name="pastelGreen">#9adbbc</color>
     <color name="pastelBlue">#8eb4ed</color>
     <color name="pastelPurple">#9c9cd9</color>
+    <color name="black">#000000</color>
 </resources>
