@@ -397,6 +397,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_settings) {
             Intent i = new Intent(this, SettingsActivity.class);
+
             startActivity(i);
         } else if (id == R.id.nav_share) {
 
