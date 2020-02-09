@@ -28,8 +28,8 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         sharedPreference.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                if(key.equals("firstPassword")){
-                    if(sharedPreferences.getBoolean("firstPassword", false)) {
+                if(key.equals("password")){
+                    if(sharedPreferences.getBoolean("password", false)) {
                         Intent i = new Intent(SettingsActivity.this, PasswordSettingActivity.class);
                         startActivity(i);
                     }
@@ -50,7 +50,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
-            Preference eventPreference = findPreference("firstPassword");
+            Preference eventPreference = findPreference("password");
         }
 
     }

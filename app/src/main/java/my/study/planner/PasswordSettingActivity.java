@@ -86,46 +86,46 @@ public class PasswordSettingActivity extends AppCompatActivity {
         if(tryCount == 1) {
             switch (v.getId()) {
                 case R.id.dial_one:
-                    firstPassword.append("1");
+                    secondPassword.append("1");
                     break;
                 case R.id.dial_two:
-                    firstPassword.append("2");
+                    secondPassword.append("2");
                     break;
                 case R.id.dial_three:
-                    firstPassword.append("3");
+                    secondPassword.append("3");
                     break;
                 case R.id.dial_four:
-                    firstPassword.append("4");
+                    secondPassword.append("4");
                     break;
                 case R.id.dial_five:
-                    firstPassword.append("5");
+                    secondPassword.append("5");
                     break;
                 case R.id.dial_six:
-                    firstPassword.append("6");
+                    secondPassword.append("6");
                     break;
                 case R.id.dial_seven:
-                    firstPassword.append("7");
+                    secondPassword.append("7");
                     break;
                 case R.id.dial_eight:
-                    firstPassword.append("8");
+                    secondPassword.append("8");
                     break;
                 case R.id.dial_nine:
-                    firstPassword.append("9");
+                    secondPassword.append("9");
                     break;
                 case R.id.dial_zero:
-                    firstPassword.append("0");
+                    secondPassword.append("0");
                     break;
                 case R.id.dial_backspace:
-                    firstPassword.deleteCharAt(firstPassword.length() - 1);
-                    if (firstPassword.length() == 0)
+                    secondPassword.deleteCharAt(secondPassword.length() - 1);
+                    if (secondPassword.length() == 0)
                         findViewById(R.id.first).setBackground(getDrawable(R.drawable.radio_button_unchecked));
-                    else if (firstPassword.length() == 1)
+                    else if (secondPassword.length() == 1)
                         findViewById(R.id.second).setBackground(getDrawable(R.drawable.radio_button_unchecked));
-                    else if (firstPassword.length() == 2)
+                    else if (secondPassword.length() == 2)
                         findViewById(R.id.third).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     break;
             }
-            switch (firstPassword.length()) {
+            switch (secondPassword.length()) {
                 case 1:
                     findViewById(R.id.first).setBackground(getDrawable(R.drawable.full_round));
                     break;
