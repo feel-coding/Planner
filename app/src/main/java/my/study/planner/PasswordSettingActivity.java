@@ -167,6 +167,10 @@ public class PasswordSettingActivity extends AppCompatActivity {
                     findViewById(R.id.fourth).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     Log.d("lengthlength", secondPassword.toString());
                     if(firstPassword.toString().equals(secondPassword.toString())) {
+                        SharedPreferences sharedPreferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("stringPassword", firstPassword.toString());
+                        editor.apply();
                         finish();
                     }
                     else {
