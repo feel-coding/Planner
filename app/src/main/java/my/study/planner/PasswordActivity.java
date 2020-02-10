@@ -2,9 +2,12 @@ package my.study.planner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -13,11 +16,13 @@ import android.widget.TextView;
 public class PasswordActivity extends AppCompatActivity {
     String password;
     StringBuilder inputPassword = new StringBuilder();
+    Vibrator vibrator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         password = sharedPreferences.getString("stringPassword", "");
     }
@@ -86,7 +91,7 @@ public class PasswordActivity extends AppCompatActivity {
                 else {
                     inputPassword = new StringBuilder();
                     ((TextView)findViewById(R.id.inputPassword)).setText("비밀번호가 일치하지 않습니다.");
-
+                    vibrator.vibrate(300);
                     findViewById(R.id.first).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     findViewById(R.id.second).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     findViewById(R.id.third).setBackground(getDrawable(R.drawable.radio_button_unchecked));
