@@ -33,11 +33,13 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
+    <PreferenceCategory app:title="보안">
 
         <SwitchPreferenceCompat
             app:key="password"
-            app:title="@string/sync_title" />
+            app:summaryOff="사용 안 함"
+            app:summaryOn="비밀번호 설정됨"
+            app:title="잠금" />
 
         <SwitchPreferenceCompat
             app:dependency="password"
@@ -45,6 +47,11 @@
             app:summaryOff="@string/attachment_summary_off"
             app:summaryOn="@string/attachment_summary_on"
             app:title="@string/attachment_title" />
+        <Preference
+            app:key="changePassword"
+            app:dependency="password"
+            app:title="비밀번호 변경"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 

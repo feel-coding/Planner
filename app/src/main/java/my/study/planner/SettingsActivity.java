@@ -1,5 +1,6 @@
 package my.study.planner;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,7 +19,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         setContentView(R.layout.settings_activity);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.settings, new SettingsFragment())
+                .replace(R.id.settings, new SettingsFragment(this))
                 .commit();
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -35,7 +36,9 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
                     }
                 }
             }
+
         });
+
     }
 
     @Override
@@ -47,10 +50,24 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         return false;
     }
     public static class SettingsFragment extends PreferenceFragmentCompat {
+        Context context;
+
+        public SettingsFragment(Context context) {
+            this.context = context;
+        }
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
-            Preference eventPreference = findPreference("password");
+            Preference preference = findPreference("changePassword");
+            preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent i = new Intent(context, ChangePasswordActivity.class);
+                    startActivity(i);
+                    return true;
+                }
+            });
         }
 
     }
