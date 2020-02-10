@@ -2,7 +2,9 @@ package my.study.planner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
@@ -17,6 +19,16 @@ public class PasswordSettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_setting);
     }
+
+    @Override
+    public void onBackPressed() {
+        SharedPreferences sharedPreference = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreference.edit();
+        editor.putBoolean("password", false);
+        editor.apply();
+        finish();
+    }
+
     public void dialClick(View v) {
         if (tryCount == 0) {
             switch (v.getId()) {
