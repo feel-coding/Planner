@@ -3,6 +3,7 @@ package my.study.planner;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 public class PasswordSettingActivity extends AppCompatActivity {
@@ -50,15 +51,18 @@ public class PasswordSettingActivity extends AppCompatActivity {
                     firstPassword.append("0");
                     break;
                 case R.id.dial_backspace:
-                    firstPassword.deleteCharAt(firstPassword.length() - 1);
-                    if (firstPassword.length() == 0)
-                        findViewById(R.id.first).setBackground(getDrawable(R.drawable.radio_button_unchecked));
-                    else if (firstPassword.length() == 1)
-                        findViewById(R.id.second).setBackground(getDrawable(R.drawable.radio_button_unchecked));
-                    else if (firstPassword.length() == 2)
-                        findViewById(R.id.third).setBackground(getDrawable(R.drawable.radio_button_unchecked));
+                    if(firstPassword.length() > 0) {
+                        firstPassword.deleteCharAt(firstPassword.length() - 1);
+                        if (firstPassword.length() == 0)
+                            findViewById(R.id.first).setBackground(getDrawable(R.drawable.radio_button_unchecked));
+                        else if (firstPassword.length() == 1)
+                            findViewById(R.id.second).setBackground(getDrawable(R.drawable.radio_button_unchecked));
+                        else if (firstPassword.length() == 2)
+                            findViewById(R.id.third).setBackground(getDrawable(R.drawable.radio_button_unchecked));
+                    }
                     break;
             }
+            Log.d("lengthlength", "첫번째 비번 길이 : " + firstPassword.length());
             switch (firstPassword.length()) {
                 case 1:
                     findViewById(R.id.first).setBackground(getDrawable(R.drawable.full_round));
@@ -71,19 +75,16 @@ public class PasswordSettingActivity extends AppCompatActivity {
                     break;
                 case 4:
                     findViewById(R.id.fourth).setBackground(getDrawable(R.drawable.full_round));
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-
-                    }
                     findViewById(R.id.first).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     findViewById(R.id.second).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     findViewById(R.id.third).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     findViewById(R.id.fourth).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     tryCount++;
+
+                    Log.d("lengthlength", firstPassword.toString());
             }
         }
-        if(tryCount == 1) {
+        else if(tryCount == 1) {
             switch (v.getId()) {
                 case R.id.dial_one:
                     secondPassword.append("1");
@@ -116,32 +117,44 @@ public class PasswordSettingActivity extends AppCompatActivity {
                     secondPassword.append("0");
                     break;
                 case R.id.dial_backspace:
-                    secondPassword.deleteCharAt(secondPassword.length() - 1);
-                    if (secondPassword.length() == 0)
-                        findViewById(R.id.first).setBackground(getDrawable(R.drawable.radio_button_unchecked));
-                    else if (secondPassword.length() == 1)
-                        findViewById(R.id.second).setBackground(getDrawable(R.drawable.radio_button_unchecked));
-                    else if (secondPassword.length() == 2)
-                        findViewById(R.id.third).setBackground(getDrawable(R.drawable.radio_button_unchecked));
+                    if(secondPassword.length() > 0) {
+                        secondPassword.deleteCharAt(secondPassword.length() - 1);
+                        if (secondPassword.length() == 0)
+                            findViewById(R.id.first).setBackground(getDrawable(R.drawable.radio_button_unchecked));
+                        else if (secondPassword.length() == 1)
+                            findViewById(R.id.second).setBackground(getDrawable(R.drawable.radio_button_unchecked));
+                        else if (secondPassword.length() == 2)
+                            findViewById(R.id.third).setBackground(getDrawable(R.drawable.radio_button_unchecked));
+                    }
                     break;
             }
+            Log.d("lengthlength", "두번째 비번 길이 : " + secondPassword.length());
             switch (secondPassword.length()) {
                 case 1:
                     findViewById(R.id.first).setBackground(getDrawable(R.drawable.full_round));
+                    findViewById(R.id.second).setBackground(getDrawable(R.drawable.radio_button_unchecked));
+                    findViewById(R.id.third).setBackground(getDrawable(R.drawable.radio_button_unchecked));
+                    findViewById(R.id.fourth).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     break;
                 case 2:
+                    findViewById(R.id.first).setBackground(getDrawable(R.drawable.full_round));
                     findViewById(R.id.second).setBackground(getDrawable(R.drawable.full_round));
+                    findViewById(R.id.third).setBackground(getDrawable(R.drawable.radio_button_unchecked));
+                    findViewById(R.id.fourth).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     break;
                 case 3:
+                    findViewById(R.id.first).setBackground(getDrawable(R.drawable.full_round));
+                    findViewById(R.id.second).setBackground(getDrawable(R.drawable.full_round));
                     findViewById(R.id.third).setBackground(getDrawable(R.drawable.full_round));
+                    findViewById(R.id.fourth).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     break;
                 case 4:
-                    findViewById(R.id.fourth).setBackground(getDrawable(R.drawable.full_round));
                     findViewById(R.id.first).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     findViewById(R.id.second).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     findViewById(R.id.third).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     findViewById(R.id.fourth).setBackground(getDrawable(R.drawable.radio_button_unchecked));
-                    if(firstPassword.equals(secondPassword)) {
+                    Log.d("lengthlength", secondPassword.toString());
+                    if(firstPassword.toString().equals(secondPassword.toString())) {
                         finish();
                     }
                     else {
