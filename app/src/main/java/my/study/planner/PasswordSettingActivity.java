@@ -137,11 +137,6 @@ public class PasswordSettingActivity extends AppCompatActivity {
                     break;
                 case 4:
                     findViewById(R.id.fourth).setBackground(getDrawable(R.drawable.full_round));
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-
-                    }
                     findViewById(R.id.first).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     findViewById(R.id.second).setBackground(getDrawable(R.drawable.radio_button_unchecked));
                     findViewById(R.id.third).setBackground(getDrawable(R.drawable.radio_button_unchecked));
@@ -150,7 +145,7 @@ public class PasswordSettingActivity extends AppCompatActivity {
                         finish();
                     }
                     else {
-
+                        tryCount = 0;
                     }
             }
         }
