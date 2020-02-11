@@ -47,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             Intent i = new Intent(SettingsActivity.this, PasswordSettingActivity.class);
             startActivity(i);
         }
-        return false;
+        return true;
     }
     public static class SettingsFragment extends PreferenceFragmentCompat {
         Context context;
