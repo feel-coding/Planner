@@ -126,5 +126,10 @@ public class EveryAdapter extends BaseAdapter {
         }
         return view;
     }
-
+    public Button getUncheckedRadioButton(View view, int position) {
+        return view.findViewById(R.id.unchecked);
+    }
+    public Button getCheckedRadioButton(View view, int position) {
+        return view.findViewById(R.id.checked);
+    }
 }

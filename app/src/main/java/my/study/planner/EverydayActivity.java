@@ -169,6 +169,8 @@ public class EverydayActivity extends AppCompatActivity {
                     adapter.removeSelection(position);
                     selected.remove(al.get(position));
                     n--;
+                    findViewById(R.id.checked).setVisibility(View.GONE);
+                    findViewById(R.id.unchecked).setVisibility(View.VISIBLE);
                 }
                 mode.setTitle(n + "개 선택됨");
             }
@@ -210,8 +212,12 @@ public class EverydayActivity extends AppCompatActivity {
                 adapter.clearSelection();
                 n = 0;
                 selected = new ArrayList<>();
-                findViewById(R.id.unchecked).setVisibility(View.INVISIBLE);
-                findViewById(R.id.checked).setVisibility(View.INVISIBLE);
+                for(int i = 0; i < adapter.getCount(); i++) {
+                    adapter.getCheckedRadioButton(adapter.getView(i, null, null), i).setVisibility(View.INVISIBLE);
+                    adapter.getUncheckedRadioButton(adapter.getView(i, null, null), i).setVisibility(View.INVISIBLE);
+                }
+                //findViewById(R.id.unchecked).setVisibility(View.INVISIBLE);
+                //findViewById(R.id.checked).setVisibility(View.INVISIBLE);
             }
         });
         getEveryTodoList();
