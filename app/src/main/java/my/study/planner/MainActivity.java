@@ -283,8 +283,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String today = date.format(dateTimeFormatter);
             while (c.moveToNext()) {
-                if (c.getInt(2) == 0) {
-                    if (c.getInt(6) == 0) {
+                if (c.getInt(2) == 0) { //반복주기가 매일이라면
+                    Log.d("please", "할 일 : " + c.getString(1) + " dbin: " + c.getInt(6));
+                    if (c.getInt(6) == 0) { //db에 아직 안 넣었다면
                         ContentValues values = new ContentValues();
                         values.put("todo", c.getString(1));
                         values.put("date", today);
